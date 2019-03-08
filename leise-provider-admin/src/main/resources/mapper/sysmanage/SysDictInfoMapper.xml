@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leise.provider.admin.model.sysmanage.mapper.SysDictInfoMapper">
+  <resultMap id="BaseResultMap" type="com.leise.provider.admin.model.sysmanage.entity.SysDictInfo">
+    <id column="dict_id" jdbcType="BIGINT" property="dictId" />
+    <result column="dict_group_code" jdbcType="VARCHAR" property="dictGroupCode" />
+    <result column="dict_group_name" jdbcType="VARCHAR" property="dictGroupName" />
+    <result column="dict_name" jdbcType="VARCHAR" property="dictName" />
+    <result column="dict_value" jdbcType="VARCHAR" property="dictValue" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="valid_status" jdbcType="BIT" property="validStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    dict_id, dict_group_code, dict_group_name, dict_name, dict_value, create_time, modify_time, 
+    valid_status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_dict_info
+    where dict_id = #{dictId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_dict_info
+    where dict_id = #{dictId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.leise.provider.admin.model.sysmanage.entity.SysDictInfo">
+    insert into sys_dict_info (dict_id, dict_group_code, dict_group_name, 
+      dict_name, dict_value, create_time, 
+      modify_time, valid_status)
+    values (#{dictId,jdbcType=BIGINT}, #{dictGroupCode,jdbcType=VARCHAR}, #{dictGroupName,jdbcType=VARCHAR}, 
+      #{dictName,jdbcType=VARCHAR}, #{dictValue,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{validStatus,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.leise.provider.admin.model.sysmanage.entity.SysDictInfo">
+    insert into sys_dict_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dictId != null">
+        dict_id,
+      </if>
+      <if test="dictGroupCode != null">
+        dict_group_code,
+      </if>
+      <if test="dictGroupName != null">
+        dict_group_name,
+      </if>
+      <if test="dictName != null">
+        dict_name,
+      </if>
+      <if test="dictValue != null">
+        dict_value,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="validStatus != null">
+        valid_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dictId != null">
+        #{dictId,jdbcType=BIGINT},
+      </if>
+      <if test="dictGroupCode != null">
+        #{dictGroupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictGroupName != null">
+        #{dictGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictName != null">
+        #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictValue != null">
+        #{dictValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validStatus != null">
+        #{validStatus,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.leise.provider.admin.model.sysmanage.entity.SysDictInfo">
+    update sys_dict_info
+    <set>
+      <if test="dictGroupCode != null">
+        dict_group_code = #{dictGroupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictGroupName != null">
+        dict_group_name = #{dictGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictName != null">
+        dict_name = #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictValue != null">
+        dict_value = #{dictValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validStatus != null">
+        valid_status = #{validStatus,jdbcType=BIT},
+      </if>
+    </set>
+    where dict_id = #{dictId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.leise.provider.admin.model.sysmanage.entity.SysDictInfo">
+    update sys_dict_info
+    set dict_group_code = #{dictGroupCode,jdbcType=VARCHAR},
+      dict_group_name = #{dictGroupName,jdbcType=VARCHAR},
+      dict_name = #{dictName,jdbcType=VARCHAR},
+      dict_value = #{dictValue,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      valid_status = #{validStatus,jdbcType=BIT}
+    where dict_id = #{dictId,jdbcType=BIGINT}
+  </update>
+</mapper>

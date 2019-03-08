@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leise.provider.admin.model.sysmanage.mapper.SysErrorInfoMapper">
+  <resultMap id="BaseResultMap" type="com.leise.provider.admin.model.sysmanage.entity.SysErrorInfo">
+    <id column="error_id" jdbcType="BIGINT" property="errorId" />
+    <result column="error_code" jdbcType="VARCHAR" property="errorCode" />
+    <result column="error_msg" jdbcType="VARCHAR" property="errorMsg" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="valid_status" jdbcType="BIT" property="validStatus" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    error_id, error_code, error_msg, create_time, modify_time, valid_status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_error_info
+    where error_id = #{errorId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_error_info
+    where error_id = #{errorId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.leise.provider.admin.model.sysmanage.entity.SysErrorInfo">
+    insert into sys_error_info (error_id, error_code, error_msg, 
+      create_time, modify_time, valid_status
+      )
+    values (#{errorId,jdbcType=BIGINT}, #{errorCode,jdbcType=VARCHAR}, #{errorMsg,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{validStatus,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.leise.provider.admin.model.sysmanage.entity.SysErrorInfo">
+    insert into sys_error_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="errorId != null">
+        error_id,
+      </if>
+      <if test="errorCode != null">
+        error_code,
+      </if>
+      <if test="errorMsg != null">
+        error_msg,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="validStatus != null">
+        valid_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="errorId != null">
+        #{errorId,jdbcType=BIGINT},
+      </if>
+      <if test="errorCode != null">
+        #{errorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="errorMsg != null">
+        #{errorMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validStatus != null">
+        #{validStatus,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.leise.provider.admin.model.sysmanage.entity.SysErrorInfo">
+    update sys_error_info
+    <set>
+      <if test="errorCode != null">
+        error_code = #{errorCode,jdbcType=VARCHAR},
+      </if>
+      <if test="errorMsg != null">
+        error_msg = #{errorMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="validStatus != null">
+        valid_status = #{validStatus,jdbcType=BIT},
+      </if>
+    </set>
+    where error_id = #{errorId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.leise.provider.admin.model.sysmanage.entity.SysErrorInfo">
+    update sys_error_info
+    set error_code = #{errorCode,jdbcType=VARCHAR},
+      error_msg = #{errorMsg,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      valid_status = #{validStatus,jdbcType=BIT}
+    where error_id = #{errorId,jdbcType=BIGINT}
+  </update>
+</mapper>

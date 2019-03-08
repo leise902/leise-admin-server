@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leise.provider.admin.model.sysmanage.mapper.SysMenuInfoMapper">
+	<resultMap id="BaseResultMap" type="com.leise.provider.admin.model.sysmanage.entity.SysMenuInfo">
+		<id column="menu_id" jdbcType="BIGINT" property="menuId" />
+		<result column="menu_code" jdbcType="VARCHAR" property="menuCode" />
+		<result column="path" jdbcType="VARCHAR" property="path" />
+		<result column="title" jdbcType="VARCHAR" property="title" />
+		<result column="icon" jdbcType="VARCHAR" property="icon" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="component" jdbcType="VARCHAR" property="component" />
+		<result column="level" jdbcType="INTEGER" property="level" />
+		<result column="parent_menu_code" jdbcType="VARCHAR" property="parentMenuCode" />
+		<result column="enable" jdbcType="BIT" property="enable" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+		<result column="valid_status" jdbcType="BIT" property="validStatus" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		menu_id, menu_code, path, title, icon, name, component, level, parent_menu_code,
+		enable, create_time, modify_time, valid_status
+	</sql>
+	<select id="searchByMenuIds" parameterType="java.util.List" resultMap="BaseResultMap">
+		Select
+		<include refid="Base_Column_List" />
+		from sys_menu_info where menu_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sys_menu_info
+		where menu_id = #{menuId,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from sys_menu_info
+		where menu_id = #{menuId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.leise.provider.admin.model.sysmanage.entity.SysMenuInfo">
+		insert into sys_menu_info (menu_id, menu_code, path,
+		title, icon, name,
+		component, level, parent_menu_code,
+		enable, create_time, modify_time,
+		valid_status)
+		values (#{menuId,jdbcType=BIGINT}, #{menuCode,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR},
+		#{title,jdbcType=VARCHAR}, #{icon,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+		#{component,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, #{parentMenuCode,jdbcType=VARCHAR},
+		#{enable,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP},
+		#{validStatus,jdbcType=BIT})
+	</insert>
+	<insert id="insertSelective" parameterType="com.leise.provider.admin.model.sysmanage.entity.SysMenuInfo">
+		insert into sys_menu_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="menuId != null">
+				menu_id,
+			</if>
+			<if test="menuCode != null">
+				menu_code,
+			</if>
+			<if test="path != null">
+				path,
+			</if>
+			<if test="title != null">
+				title,
+			</if>
+			<if test="icon != null">
+				icon,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="component != null">
+				component,
+			</if>
+			<if test="level != null">
+				level,
+			</if>
+			<if test="parentMenuCode != null">
+				parent_menu_code,
+			</if>
+			<if test="enable != null">
+				enable,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+			<if test="validStatus != null">
+				valid_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="menuId != null">
+				#{menuId,jdbcType=BIGINT},
+			</if>
+			<if test="menuCode != null">
+				#{menuCode,jdbcType=VARCHAR},
+			</if>
+			<if test="path != null">
+				#{path,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="icon != null">
+				#{icon,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="component != null">
+				#{component,jdbcType=VARCHAR},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=INTEGER},
+			</if>
+			<if test="parentMenuCode != null">
+				#{parentMenuCode,jdbcType=VARCHAR},
+			</if>
+			<if test="enable != null">
+				#{enable,jdbcType=BIT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="validStatus != null">
+				#{validStatus,jdbcType=BIT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.leise.provider.admin.model.sysmanage.entity.SysMenuInfo">
+		update sys_menu_info
+		<set>
+			<if test="menuCode != null">
+				menu_code = #{menuCode,jdbcType=VARCHAR},
+			</if>
+			<if test="path != null">
+				path = #{path,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="icon != null">
+				icon = #{icon,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="component != null">
+				component = #{component,jdbcType=VARCHAR},
+			</if>
+			<if test="level != null">
+				level = #{level,jdbcType=INTEGER},
+			</if>
+			<if test="parentMenuCode != null">
+				parent_menu_code = #{parentMenuCode,jdbcType=VARCHAR},
+			</if>
+			<if test="enable != null">
+				enable = #{enable,jdbcType=BIT},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="validStatus != null">
+				valid_status = #{validStatus,jdbcType=BIT},
+			</if>
+		</set>
+		where menu_id = #{menuId,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.leise.provider.admin.model.sysmanage.entity.SysMenuInfo">
+		update sys_menu_info
+		set menu_code = #{menuCode,jdbcType=VARCHAR},
+		path = #{path,jdbcType=VARCHAR},
+		title = #{title,jdbcType=VARCHAR},
+		icon = #{icon,jdbcType=VARCHAR},
+		name = #{name,jdbcType=VARCHAR},
+		component = #{component,jdbcType=VARCHAR},
+		level = #{level,jdbcType=INTEGER},
+		parent_menu_code = #{parentMenuCode,jdbcType=VARCHAR},
+		enable = #{enable,jdbcType=BIT},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+		valid_status = #{validStatus,jdbcType=BIT}
+		where menu_id = #{menuId,jdbcType=BIGINT}
+	</update>
+</mapper>

@@ -1,0 +1,91 @@
+{
+    "flowBizlogic": {
+        "flowActions": [{
+            "loc": "-60 -280",
+            "groupId": "FLOW",
+            "actionId": "startAction",
+            "refClass": "com.leise.flow.action.flow.StartAction",
+            "text": "开始",
+            "category": "FLOW_START",
+            "key": -1,
+            "actionName": "开始"
+        }, {
+            "loc": "-60 -170",
+            "pageSql": "select t.id as flowInfoId, t.flow_id as flowId, t.flow_name as flowName, t1.module_id as moduleId, t1.module_name as moduleName, t.flow_version as flowVersion, t.request_url as requestUrl, t.status as status, t.create_time as createTime, t.modify_time as modifyTime from flow_info t, module_info t1 where t.module_id = t1.module_id and t.valid_status = 1 limit :limit, :offset ",
+            "groupId ": "DATABASE ",
+            "refClass ": "com.leise.flow.action.database.PageQueryAction ",
+            "queryCount ": "true ",
+            "countSql ": "select count( * ) from flow_info t, module_info t1 where t.module_id = t1.module_id and t.valid_status = 1 ",
+            "outParamNames ": "flowInfoId || flowId || flowName || moduleId || moduleName || flowVersion || requestUrl || status || createTime || modifyTime ",
+            "actionId ": "pageQueryAction ",
+            "text ": "分页查询 ",
+            "listName ": "flowPage ",
+            "category ": "DATABASE ",
+            "key ": -2,
+            "actionName ": "分页查询 "
+        }, {
+            "loc ": " - 60 - 40 ",
+            "groupId ": "FLOW ",
+            "actionId": "endAction",
+            "refClass": "com.leise.flow.action.flow.EndAction",
+            "text": "结束",
+            "category": "FLOW_END",
+            "key": -3,
+            "actionName": "结束"
+        }],
+        "flowLinks": [{
+                "from ": -1,
+                "to ": -2,
+                "points ": [-60, -256.24418604651163, -60, -246.24418604651163, -60, -223.12209302325584, -59.999999999999986, -223.12209302325584, -59.999999999999986, -200.00000000000006, -59.999999999999986, -190.00000000000006]
+            },
+            {
+                "from": -2,
+                "to": -3,
+                "points": [-59.999999999999986, -150.00000000000006, -59.999999999999986, -140.00000000000006, -59.999999999999986, -106.87790697674421, -60, -106.87790697674421, -60, -73.75581395348837, -60, -63.75581395348837]
+            }
+        ]
+    },
+    "publishNo": "123456",
+    "flowData": [{
+        "outputFlag ": true,
+        "inputFlag ": false,
+        "collectFlag ": false,
+        "dataName ": "流程分页查询结果 ",
+        "dataCode ": "flowPage "
+    }, {
+        "outputFlag ": false,
+        "inputFlag ": true,
+        "collectFlag ": false,
+        "dataName ": "模块编号 ",
+        "dataCode ": "moduleId "
+    }, {
+        "outputFlag ": true,
+        "inputFlag ": true,
+        "collectFlag ": false,
+        "dataName ": "当前页码 ",
+        "dataCode ": "pageNum "
+    }, {
+        "outputFlag ": true,
+        "inputFlag ": true,
+        "collectFlag ": false,
+        "dataName ": "每页显示数量 ",
+        "dataCode ": "pageSize "
+    }, {
+        "outputFlag ": true,
+        "inputFlag ": false,
+        "collectFlag ": false,
+        "dataName ": "总记录数 ",
+        "dataCode ": "total "
+    }],
+    "remark ": "DEFAULT ",
+    "version ": "713e2eb052706a6c35d0981d446b3a42 ",
+    "flowInfo ": {
+        "requestUrl ": " /design/queryFlowPage/1.0.0 ",
+        "flowVersion ": "1.0.0 ",
+        "moduleId ": "leise-provider-flow ",
+        "flowId ": "queryFlowPage ",
+        "flowName ": "流程信息分页查询 "
+    },
+    "flowInfoId ": 200001,
+    "status ": "SAVED "
+}
