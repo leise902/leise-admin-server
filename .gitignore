@@ -23,6 +23,8 @@ buildSrc/build
 /src/asciidoc/build
 target/
 .mvn/
+/.metadata
+/RemoteSystemsTempFiles
 mvnw
 mvnw.cmd
 *.sql
