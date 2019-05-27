@@ -55,7 +55,8 @@ public class DataCopyAction implements IAction {
     public DataCopyAction clone() {
         try {
             return (DataCopyAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             throw new ActionException(800000, "action clone inner error", e);
         }
     }

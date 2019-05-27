@@ -26,6 +26,7 @@ public class OkHttpConfig {
     @Bean
     public X509TrustManager x509TrustManager() {
         return new X509TrustManager() {
+
             @Override
             public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
 
@@ -50,9 +51,11 @@ public class OkHttpConfig {
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[] { x509TrustManager() }, new SecureRandom());
             return sslContext.getSocketFactory();
-        } catch (NoSuchAlgorithmException e) {
+        }
+        catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } catch (KeyManagementException e) {
+        }
+        catch (KeyManagementException e) {
             e.printStackTrace();
         }
         return null;

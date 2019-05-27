@@ -43,7 +43,8 @@ public class Md5Action implements IAction {
         try {
             String encryptData = DigestUtils.md5DigestAsHex(strBuilder.toString().getBytes("utf-8"));
             context.put(this.encryptDataName, encryptData);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.error("@_@[数据库查询异常]:", e);
             throw new ActionException(600001, "数据MD5加密失败", e);
         }
@@ -54,7 +55,8 @@ public class Md5Action implements IAction {
     public Md5Action clone() {
         try {
             return (Md5Action) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             e.printStackTrace();
             return null;
         }

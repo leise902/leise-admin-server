@@ -47,7 +47,8 @@ public class ListForeachAction implements IAction {
     public ListForeachAction clone() {
         try {
             return (ListForeachAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             throw new ActionException(800000, "action clone inner error", e);
         }
     }

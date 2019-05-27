@@ -59,11 +59,14 @@ public class ListCopyAction implements IAction {
             byteIn = new ByteArrayInputStream(byteOut.toByteArray());
             objectIn = new ObjectInputStream(byteIn);
             target = (List<T>) objectIn.readObject();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
 
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e) {
 
-        } finally {
+        }
+        finally {
             IOUtils.close(byteOut);
             IOUtils.close(objectOut);
             IOUtils.close(byteIn);
@@ -92,7 +95,8 @@ public class ListCopyAction implements IAction {
     public ListCopyAction clone() {
         try {
             return (ListCopyAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             throw new ActionException(800000, "action clone inner error", e);
         }
     }

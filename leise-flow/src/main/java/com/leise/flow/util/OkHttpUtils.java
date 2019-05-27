@@ -58,7 +58,8 @@ public class OkHttpUtils {
             if (response.isSuccessful()) {
                 return response.body().string();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.error("okhttp3 put error >> ex = {}", e.getMessage());
         }
         return null;
@@ -84,7 +85,8 @@ public class OkHttpUtils {
             if (response.isSuccessful()) {
                 return response.body().string();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.error("okhttp3 put error >> ex = {}", e.getMessage());
         }
         return null;
@@ -93,10 +95,8 @@ public class OkHttpUtils {
     /**
      * get
      *
-     * @param url
-     *            请求的url
-     * @param queries
-     *            请求的参数，在浏览器？后面的数据，没有可以传null
+     * @param url 请求的url
+     * @param queries 请求的参数，在浏览器？后面的数据，没有可以传null
      * @return
      */
     public static String get(String url, Map<String, String> queries, Long connectTimeout, Long readTimeout) {
@@ -108,10 +108,8 @@ public class OkHttpUtils {
     /**
      * post
      *
-     * @param url
-     *            请求的url
-     * @param params
-     *            post form 提交的参数
+     * @param url 请求的url
+     * @param params post form 提交的参数
      * @return
      */
     public static String postFormParams(String url, Map<String, String> params, Long connectTimeout, Long readTimeout) {

@@ -33,7 +33,8 @@ public class GenUuidAction implements IAction {
     public IAction clone() {
         try {
             return (GenUuidAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             throw new ActionException(800000, "action clone inner error", e);
         }
     }

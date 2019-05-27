@@ -71,7 +71,8 @@ public class MapOperationAction implements IAction {
     public MapOperationAction clone() {
         try {
             return (MapOperationAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             throw new ActionException(800000, "action clone inner error", e);
         }
     }

@@ -52,10 +52,12 @@ public class SingleOperAction implements IJdbcAction {
             if (operCount == 0) {
                 return ActionResultEnum.NODATA;
             }
-        } catch (DataAccessException e) {
+        }
+        catch (DataAccessException e) {
             LOG.error("@_@[数据库操作异常]:", e);
             throw new ActionException(800003, "数据库操作异常", e);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.error("@_@[其他类型异常]:", e);
             throw new ActionException(800004, "数据库操作未知异常", e);
         }
@@ -83,7 +85,8 @@ public class SingleOperAction implements IJdbcAction {
     public SingleOperAction clone() {
         try {
             return (SingleOperAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             e.printStackTrace();
             return null;
         }

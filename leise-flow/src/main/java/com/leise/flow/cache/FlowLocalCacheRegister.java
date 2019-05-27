@@ -17,7 +17,6 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
 import com.leise.flow.context.FlowContext;
 import com.leise.flow.exception.FlowException;
-import com.leise.flow.model.bizlogic.entity.FlowBizlogic;
 import com.leise.flow.model.bizlogic.entity.FlowData;
 import com.leise.flow.model.bizlogic.entity.FlowInfo;
 import com.leise.flow.model.dto.FlowModel;
@@ -38,6 +37,7 @@ public class FlowLocalCacheRegister {
 
     public LoadingCache<FlowCacheKey, FlowMetaData> flowLoadingCache = CacheBuilder.newBuilder().maximumSize(5000)
             .build(new CacheLoader<FlowCacheKey, FlowMetaData>() {
+
                 @Override
                 public FlowMetaData load(FlowCacheKey flowCacheKey) throws Exception {
                     String moduleId = flowCacheKey.getModuleId();
@@ -48,7 +48,8 @@ public class FlowLocalCacheRegister {
                         FlowModel flowModel = flowModelService.buildFlowModel(moduleId, flowId, flowVersion);
                         FlowMetaData metaData = initFlowMetaData(flowModel);
                         return metaData;
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         throw new FlowException("加载流程失败，请进行数据检查");
                     }
                 }
@@ -58,7 +59,8 @@ public class FlowLocalCacheRegister {
         try {
             LOG.info("命中缓存对象:{}", this.flowLoadingCache.toString());
             return flowLoadingCache.get(flowCacheKey);
-        } catch (ExecutionException e) {
+        }
+        catch (ExecutionException e) {
             e.printStackTrace();
             return null;
         }
@@ -86,7 +88,7 @@ public class FlowLocalCacheRegister {
     public FlowMetaData initFlowMetaData(FlowModel flowModel) {
         FlowInfo flowInfo = flowModel.getFlowInfo();
         List<FlowData> flowDataList = flowModel.getFlowData();
-        FlowBizlogic flowBizlogic = flowModel.getFlowBizlogic();
+        Map<String, Object> flowBizlogic = flowModel.getFlowBizlogic();
         FlowMetaData metaData = new FlowMetaData();
         String moduleId = flowInfo.getModuleId();
         String flowId = flowInfo.getFlowId();
@@ -110,10 +112,9 @@ public class FlowLocalCacheRegister {
         metaData.setInputParams(inputParams);
         metaData.setOutputParams(outputParams);
         if (flowBizlogic != null) {
-            String bizLogic = flowBizlogic.getBizlogic();
-            Map<String, Object> bizLogicMap = JSON.parseObject(bizLogic);
-            List<FlowAction> flowActions = (List<FlowAction>) bizLogicMap.get("nodeDataArray");
-            List<FlowLink> flowLinks = (List<FlowLink>) bizLogicMap.get("linkDataArray");
+
+            List<FlowAction> flowActions = (List<FlowAction>) flowBizlogic.get("nodeDataArray");
+            List<FlowLink> flowLinks = (List<FlowLink>) flowBizlogic.get("linkDataArray");
             FlowActionParser.parse(flowActions, metaData);
             FlowLinkParser.parse(flowLinks, metaData);
 

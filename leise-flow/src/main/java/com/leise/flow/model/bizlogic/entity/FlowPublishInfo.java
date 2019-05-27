@@ -18,22 +18,22 @@ public class FlowPublishInfo implements Serializable {
 
     @Column(name = "flow_info_id")
     private long flowInfoId;
-    
+
     @Column(name = "publish_no")
     private String publishNo;
-    
+
     @Column(name = "version")
     private String version;
-    
+
     @Column(name = "access_key")
     private String accessKey;
-    
+
     @Column(name = "module_id")
     private String moduleId;
-    
+
     @Column(name = "flow_id")
     private String flowId;
-    
+
     @Column(name = "flow_version")
     private String flowVersion;
 
@@ -45,10 +45,10 @@ public class FlowPublishInfo implements Serializable {
 
     @Column(name = "flow_bizlogic")
     private String flowBizlogic;
-    
+
     @Column(name = "status")
     private String status;
-    
+
     @Column(name = "remark")
     private String remark;
 

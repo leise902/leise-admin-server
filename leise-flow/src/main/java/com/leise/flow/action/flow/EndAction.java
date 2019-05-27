@@ -21,7 +21,8 @@ public class EndAction implements IAction {
     public EndAction clone() {
         try {
             return (EndAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             return null;
         }
     }

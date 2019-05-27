@@ -46,7 +46,8 @@ public class CleanFlowCacheAction implements IAction {
     public CleanFlowCacheAction clone() {
         try {
             return (CleanFlowCacheAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             e.printStackTrace();
             return null;
         }

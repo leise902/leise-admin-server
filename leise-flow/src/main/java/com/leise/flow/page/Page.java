@@ -1,25 +1,19 @@
 /*
- * The MIT License (MIT)
- *
- * Copyright (c) 2014 abel533@gmail.com
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * The MIT License (MIT) Copyright (c) 2014 abel533@gmail.com Permission is
+ * hereby granted, free of charge, to any person obtaining a copy of this
+ * software and associated documentation files (the "Software"), to deal in the
+ * Software without restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions: The above copyright notice and this
+ * permission notice shall be included in all copies or substantial portions of
+ * the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+ * EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+ * OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 
 package com.leise.flow.page;
@@ -42,37 +36,49 @@ public class Page<T> implements Serializable {
 
     // 当前页
     private int pageNum;
+
     // 每页的数量
     private int pageSize;
+
     // 当前页的数量
     private int size;
 
     // 总记录数
     private long total;
+
     // 总页数
     private int pages;
+
     // 结果集
     private List<T> list;
 
     // 第一页
     private int firstPage;
+
     // 前一页
     private int prePage;
+
     // 下一页
     private int nextPage;
+
     // 最后一页
     private int lastPage;
 
     // 是否为第一页
     private boolean isFirstPage = false;
+
     // 是否为最后一页
     private boolean isLastPage = false;
+
     // 是否有前一页
     private boolean hasPreviousPage = false;
+
     // 是否有下一页
     private boolean hasNextPage = false;
+
     // 导航页码数
     private int navigatePages = 8;
+
     // 所有导航页号
     private int[] navigatepageNums;
 
@@ -82,8 +88,7 @@ public class Page<T> implements Serializable {
     /**
      * 包装Page对象
      *
-     * @param list
-     *            page结果
+     * @param list page结果
      */
     public Page(List<T> list, int pageNum, int pageSize, long total) {
         this.pageNum = pageNum;

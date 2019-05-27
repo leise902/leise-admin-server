@@ -70,7 +70,7 @@ public class FlowBizlogic implements Serializable {
     public void setFlowInfoId(long flowInfoId) {
         this.flowInfoId = flowInfoId;
     }
-    
+
     public String getBizlogic() {
         return bizlogic;
     }

@@ -60,10 +60,12 @@ public class ListQueryAction implements IJdbcAction {
             LOG.info("[输出查询记录数]:{}", dataList.size());
             List<Map<String, Object>> result = ActionUtils.filterParamsToList(dataList, outParamNameArray);
             context.put(this.listName, result);
-        } catch (DataAccessException e) {
+        }
+        catch (DataAccessException e) {
             LOG.error("@_@[数据库查询异常]:", e);
             throw new ActionException(800001, "数据库查询异常", e);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.error("@_@[其他类型异常]:", e);
             throw new ActionException(800002, "数据库查询未知异常", e);
         }
@@ -99,7 +101,8 @@ public class ListQueryAction implements IJdbcAction {
     public ListQueryAction clone() {
         try {
             return (ListQueryAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             e.printStackTrace();
             return null;
         }

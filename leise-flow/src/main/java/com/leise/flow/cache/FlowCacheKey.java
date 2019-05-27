@@ -6,7 +6,9 @@ package com.leise.flow.cache;
 public class FlowCacheKey implements Comparable<FlowCacheKey> {
 
     private String moduleId;
+
     private String flowId;
+
     private String flowVersion;
 
     public FlowCacheKey(String moduleId, String flowId, String flowVersion) {

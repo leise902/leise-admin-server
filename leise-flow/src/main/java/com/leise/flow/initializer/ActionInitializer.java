@@ -1,31 +1,32 @@
 package com.leise.flow.initializer;
 
-import com.google.common.collect.Maps;
-import com.leise.flow.action.IAction;
-import com.leise.flow.annotation.Action;
-import com.leise.flow.annotation.ActionProperty;
-import com.leise.flow.cache.ActionLocalCacheRegister;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Maps;
+import com.leise.flow.action.IAction;
+import com.leise.flow.annotation.Action;
+import com.leise.flow.annotation.ActionProperty;
+import com.leise.flow.cache.ActionLocalCacheRegister;
 
 /**
  * Created by JY-IT-D001 on 2018/6/28.
  */
 @Component
 @Order(1)
-public class ActionInitializer implements InitializingBean {
+public class ActionInitializer implements CommandLineRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActionInitializer.class);
 
@@ -33,7 +34,7 @@ public class ActionInitializer implements InitializingBean {
     private List<IAction> actionList;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void run(String... args) throws Exception {
         LOG.info("初始化组件配置开始......");
         if (CollectionUtils.isEmpty(actionList)) {
             LOG.warn("没有可用的组件列表......");

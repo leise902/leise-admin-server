@@ -63,7 +63,8 @@ public class FlowActionParser {
                 field.setAccessible(true);
                 try {
                     field.set(action, value);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     LOG.error("初始化Action配置有误:{}", JSON.toJSONString(flowAction));
                     e.printStackTrace();
                 }
@@ -72,7 +73,8 @@ public class FlowActionParser {
         // 验证action初始化参数
         try {
             action.validate();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.error("o_0 Action组件初始化出错, 流程信息:{},异常信息:{}", JSON.toJSONString(flowAction), e.getMessage());
         }
     }

@@ -172,7 +172,8 @@ public class PageQueryAction implements IJdbcAction {
     public PageQueryAction clone() {
         try {
             return (PageQueryAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             e.printStackTrace();
             return null;
         }

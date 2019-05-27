@@ -74,7 +74,8 @@ public class HttpCommuAction implements IAction {
     public IAction clone() {
         try {
             return (HttpCommuAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             e.printStackTrace();
             return null;
         }

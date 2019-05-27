@@ -62,7 +62,8 @@ public class ObjectToJsonStringAction implements IAction {
     public ObjectToJsonStringAction clone() {
         try {
             return (ObjectToJsonStringAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             throw new ActionException(800000, "action clone inner error", e);
         }
     }

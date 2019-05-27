@@ -52,13 +52,16 @@ public class SingleQueryAction implements IJdbcAction {
             Map<String, Object> result = ActionUtils.filterParamsToMap(outParamValueMap, outParamNameArray);
             LOG.info("[输出参数结果]:{}", result);
             context.putAll(result);
-        } catch (EmptyResultDataAccessException e) {
+        }
+        catch (EmptyResultDataAccessException e) {
             LOG.warn("!!![没有查询到数据记录]");
             return ActionResultEnum.NODATA;
-        } catch (DataAccessException e) {
+        }
+        catch (DataAccessException e) {
             LOG.error("@_@[数据库查询异常]:", e);
             throw new ActionException(800001, "数据库查询异常", e);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             LOG.error("@_@[其他类型异常]:", e);
             throw new ActionException(800002, "数据库查询未知异常", e);
         }
@@ -85,7 +88,8 @@ public class SingleQueryAction implements IJdbcAction {
     public SingleQueryAction clone() {
         try {
             return (SingleQueryAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             e.printStackTrace();
             return null;
         }

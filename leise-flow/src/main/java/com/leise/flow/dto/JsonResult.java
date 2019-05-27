@@ -16,9 +16,9 @@ public class JsonResult implements Serializable {
     private String errorMsg;
 
     private Object result;
-    
+
     public JsonResult() {
-        
+
     }
 
     public JsonResult(int errorCode, String errorMsg, Object result) {

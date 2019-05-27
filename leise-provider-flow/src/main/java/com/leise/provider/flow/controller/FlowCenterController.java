@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@RequestMapping(value = {"/design", "/module", "/flowCenter"})
+@RequestMapping(value = {"/flow/design", "/design", "/module", "/flowCenter"})
 public class FlowCenterController extends ApiController {
 
     private final static Logger LOG = LoggerFactory.getLogger(FlowCenterController.class);

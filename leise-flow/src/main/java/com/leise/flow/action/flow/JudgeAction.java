@@ -21,7 +21,8 @@ public class JudgeAction implements IJumpAction {
     public JudgeAction clone() {
         try {
             return (JudgeAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             e.printStackTrace();
             return null;
         }

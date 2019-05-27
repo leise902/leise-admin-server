@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -17,11 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.leise.flow.config.ApplicationConfig;
-import com.leise.flow.enums.FlowLoadingModeEnum;
 import com.leise.flow.model.bizlogic.entity.FlowBizlogic;
 import com.leise.flow.model.bizlogic.entity.FlowData;
 import com.leise.flow.model.bizlogic.entity.FlowInfo;
@@ -29,15 +28,11 @@ import com.leise.flow.model.bizlogic.service.FlowBizlogicService;
 import com.leise.flow.model.bizlogic.service.FlowDataService;
 import com.leise.flow.model.bizlogic.service.FlowInfoService;
 import com.leise.flow.model.dto.FlowModel;
-import com.leise.flow.util.OkHttpUtils;
 
 @Component
 public class FlowModelService {
 
     private static final Logger LOG = LoggerFactory.getLogger(FlowModelService.class);
-
-    @Autowired
-    private ApplicationConfig applicationConfig;
 
     @Autowired
     private FlowInfoService flowInfoService;
@@ -51,29 +46,14 @@ public class FlowModelService {
     private static final String BIZ_FILE_DIR = "classpath:bizlogic";
 
     public List<FlowModel> buildFlowModelList(String moduleId) {
-        String flowLoadingMode = applicationConfig.getFlowLoadingMode();
-        if (flowLoadingMode.equalsIgnoreCase(FlowLoadingModeEnum.REMOTE.toString())) {
-            return this.buildFlowModelListFromFlowCenter();
-        } else if (flowLoadingMode.equalsIgnoreCase(FlowLoadingModeEnum.FILE.toString())) {
-            return this.buildFlowModelListFromFlie(moduleId);
-        } else if (flowLoadingMode.equalsIgnoreCase(FlowLoadingModeEnum.DATABASE.toString())) {
-            return this.buildFlowModelListFromDataBase(moduleId);
-        } else {
-            return null;
-        }
+        this.buildFlowModelListFromDataBase(moduleId);
+        return this.buildFlowModelListFromFlie(moduleId);
     }
 
     public FlowModel buildFlowModel(String moduleId, String flowId, String flowVersion) {
-        String flowLoadingMode = applicationConfig.getFlowLoadingMode();
-        if (flowLoadingMode.equalsIgnoreCase(FlowLoadingModeEnum.REMOTE.toString())) {
-            return this.buildFlowModelFromFlowCenter(moduleId, flowId, flowVersion);
-        } else if (flowLoadingMode.equalsIgnoreCase(FlowLoadingModeEnum.FILE.toString())) {
-            return this.buildFlowModelFromFlie(moduleId, flowId, flowVersion);
-        } else if (flowLoadingMode.equalsIgnoreCase(FlowLoadingModeEnum.DATABASE.toString())) {
-            return this.buildFlowModelFromDataBase(moduleId, flowId, flowVersion);
-        } else {
-            return null;
-        }
+        this.buildFlowModelFromDataBase(moduleId, flowId, flowVersion);
+        return this.buildFlowModelFromFlie(moduleId, flowId, flowVersion);
+
     }
 
     public FlowModel buildFlowModelFromDataBase(String moduleId, String flowId, String flowVersion) {
@@ -89,7 +69,9 @@ public class FlowModelService {
             flowModel.setFlowData(flowDataList);
         }
         FlowBizlogic flowBizlogic = flowBizlogicService.findByFlowInfoId(flowInfoId);
-        flowModel.setFlowBizlogic(flowBizlogic);
+        String bizlogic = flowBizlogic.getBizlogic();
+        Map<String, Object> flowBizlogicMap = JSON.parseObject(bizlogic);
+        flowModel.setFlowBizlogic(flowBizlogicMap);
         return flowModel;
     }
 
@@ -101,7 +83,8 @@ public class FlowModelService {
             String filePath = new StringBuilder().append(BIZ_FILE_DIR).append(IOUtils.DIR_SEPARATOR).append(fileName)
                     .toString();
             bizlogicFile = ResourceUtils.getFile(filePath);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             return null;
         }
         if (bizlogicFile.exists()) {
@@ -110,47 +93,12 @@ public class FlowModelService {
                 String content = null;
                 content = IOUtils.toString(in, "utf-8");
                 flowModel = JSON.parseObject(content, FlowModel.class);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
 
             }
         }
         return flowModel;
-    }
-
-    public FlowModel buildFlowModelFromFlowCenter(String moduleId, String flowId, String flowVersion) {
-        String accessKey = applicationConfig.getAccessKey();
-        String flowCenterUrl = applicationConfig.getFlowCenterUrl();
-        Map<String, Object> params = Maps.newHashMap();
-        params.put("accessKey", accessKey);
-        params.put("moduleId", moduleId);
-        params.put("flowId", flowId);
-        params.put("flowVersion", flowVersion);
-        String requestUrl = new StringBuilder().append(flowCenterUrl).append("/queryPublishedFlow/1.0.0").toString();
-        String responseMessage = OkHttpUtils.postJsonParams(requestUrl, JSON.toJSONString(params), 10000L, 10000L);
-        if (StringUtils.isNotEmpty(responseMessage)) {
-            JSONObject response = JSON.parseObject(responseMessage);
-            JSONObject result = response.getJSONObject("result");
-            FlowModel flowModel = JSON.parseObject(JSON.toJSONString(result), FlowModel.class);
-            return flowModel;
-        }
-        return null;
-    }
-
-    public List<FlowModel> buildFlowModelListFromFlowCenter() {
-        List<FlowModel> flowModelList = Lists.newArrayList();
-        String accessKey = applicationConfig.getAccessKey();
-        String flowCenterUrl = applicationConfig.getFlowCenterUrl();
-        Map<String, Object> params = Maps.newHashMap();
-        params.put("accessKey", accessKey);
-        String requestUrl = new StringBuilder().append(flowCenterUrl).append("/queryPublishedFlowList/1.0.0")
-                .toString();
-        String responseMessage = OkHttpUtils.postJsonParams(requestUrl, JSON.toJSONString(params), 10000L, 10000L);
-        if (StringUtils.isNotEmpty(responseMessage)) {
-            JSONObject response = JSON.parseObject(responseMessage);
-            JSONObject result = response.getJSONObject("result");
-            flowModelList = JSON.parseArray(JSON.toJSONString(result.get("flowModelList")), FlowModel.class);
-        }
-        return flowModelList;
     }
 
     public List<FlowModel> buildFlowModelListFromDataBase(String moduleId) {
@@ -160,7 +108,8 @@ public class FlowModelService {
             LOG.warn("未查询到流程信息.......................");
             return flowModelList;
         }
-        list.stream().forEach(flowInfo -> {
+
+        for (FlowInfo flowInfo : list) {
             FlowModel flowModel = new FlowModel();
             flowModel.setFlowInfo(flowInfo);
             long flowInfoId = flowInfo.getId();
@@ -169,9 +118,29 @@ public class FlowModelService {
                 flowModel.setFlowData(flowDataList);
             }
             FlowBizlogic flowBizlogic = flowBizlogicService.findByFlowInfoId(flowInfoId);
-            flowModel.setFlowBizlogic(flowBizlogic);
+            String bizlogic = flowBizlogic.getBizlogic();
+            Map<String, Object> flowBizlogicMap = JSON.parseObject(bizlogic);
+            flowModel.setFlowBizlogic(flowBizlogicMap);
+            String content = JSON.toJSONString(flowModel);
+            String flowId = flowInfo.getFlowId();
+            String flowVersion = flowInfo.getFlowVersion();
+            String fileName = StringUtils.join(new String[] { flowId, flowVersion }, "-") + ".json";
+            try {
+                Path rootLocation = Paths.get("bizlogic");
+                if (Files.notExists(rootLocation)) {
+                    Files.createDirectories(rootLocation);
+                }
+                Path path = rootLocation.resolve(fileName);
+                byte[] bytes = content.getBytes();
+                Files.write(path, bytes);
+            }
+            catch (Exception e) {
+                LOG.info("写入业务文件失败.............");
+                e.printStackTrace();
+                continue;
+            }
             flowModelList.add(flowModel);
-        });
+        }
         return flowModelList;
     }
 
@@ -180,7 +149,8 @@ public class FlowModelService {
         File file = null;
         try {
             file = ResourceUtils.getFile(BIZ_FILE_DIR);
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             return flowModelList;
         }
         if (file.exists() && file.isDirectory()) {
@@ -191,7 +161,8 @@ public class FlowModelService {
                         String content = IOUtils.toString(in, "utf-8");
                         FlowModel flowModel = JSON.parseObject(content, FlowModel.class);
                         flowModelList.add(flowModel);
-                    } catch (IOException e) {
+                    }
+                    catch (IOException e) {
                         continue;
                     }
                 }

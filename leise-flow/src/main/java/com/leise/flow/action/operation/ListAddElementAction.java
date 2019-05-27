@@ -57,7 +57,8 @@ public class ListAddElementAction implements IAction {
     public ListAddElementAction clone() {
         try {
             return (ListAddElementAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             throw new ActionException(800000, "action clone inner error", e);
         }
     }

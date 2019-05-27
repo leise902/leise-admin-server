@@ -49,7 +49,8 @@ public class GenSerialNoAction implements IAction {
     public IAction clone() {
         try {
             return (GenSerialNoAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             throw new ActionException(800000, "action clone inner error", e);
         }
     }

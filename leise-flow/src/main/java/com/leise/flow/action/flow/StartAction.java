@@ -21,7 +21,8 @@ public class StartAction implements IAction {
     public StartAction clone() {
         try {
             return (StartAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             e.printStackTrace();
             return null;
         }

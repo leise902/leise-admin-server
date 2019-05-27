@@ -2,8 +2,8 @@ package com.leise.flow.model.dto;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
-import com.leise.flow.model.bizlogic.entity.FlowBizlogic;
 import com.leise.flow.model.bizlogic.entity.FlowData;
 import com.leise.flow.model.bizlogic.entity.FlowInfo;
 
@@ -18,7 +18,7 @@ public class FlowModel implements Serializable {
 
     private List<FlowData> flowData;
 
-    private FlowBizlogic flowBizlogic;
+    private Map<String, Object> flowBizlogic;
 
     private String version;
 
@@ -38,11 +38,11 @@ public class FlowModel implements Serializable {
         this.flowData = flowData;
     }
 
-    public FlowBizlogic getFlowBizlogic() {
+    public Map<String, Object> getFlowBizlogic() {
         return flowBizlogic;
     }
 
-    public void setFlowBizlogic(FlowBizlogic flowBizlogic) {
+    public void setFlowBizlogic(Map<String, Object> flowBizlogic) {
         this.flowBizlogic = flowBizlogic;
     }
 

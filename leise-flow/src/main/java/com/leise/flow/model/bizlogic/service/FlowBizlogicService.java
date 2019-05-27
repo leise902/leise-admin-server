@@ -2,6 +2,7 @@ package com.leise.flow.model.bizlogic.service;
 
 import com.google.common.collect.Maps;
 import com.leise.flow.model.bizlogic.entity.FlowBizlogic;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -27,7 +28,8 @@ public class FlowBizlogicService {
         try {
             return namedParameterJdbcTemplate.queryForObject(FIND_BY_FLOW_INFO_ID_SQL, params,
                     new BeanPropertyRowMapper<>(FlowBizlogic.class));
-        } catch (EmptyResultDataAccessException e) {
+        }
+        catch (EmptyResultDataAccessException e) {
             return null;
         }
     }

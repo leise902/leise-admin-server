@@ -62,7 +62,8 @@ public class JsonStringToMapAction implements IAction {
     public JsonStringToMapAction clone() {
         try {
             return (JsonStringToMapAction) super.clone();
-        } catch (CloneNotSupportedException e) {
+        }
+        catch (CloneNotSupportedException e) {
             throw new ActionException(800000, "action clone inner error", e);
         }
     }
