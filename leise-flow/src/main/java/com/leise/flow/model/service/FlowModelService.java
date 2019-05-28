@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.ResourceUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -103,13 +104,13 @@ public class FlowModelService {
 
     public List<FlowModel> buildFlowModelListFromDataBase(String moduleId) {
         List<FlowModel> flowModelList = Lists.newArrayList();
-        List<FlowInfo> list = flowInfoService.searchByModuleId(moduleId);
-        if (CollectionUtils.isEmpty(list)) {
+        List<FlowInfo> flowInfoList = flowInfoService.searchByModuleId(moduleId);
+        if (CollectionUtils.isEmpty(flowInfoList)) {
             LOG.warn("未查询到流程信息.......................");
             return flowModelList;
         }
 
-        for (FlowInfo flowInfo : list) {
+        for (FlowInfo flowInfo : flowInfoList) {
             FlowModel flowModel = new FlowModel();
             flowModel.setFlowInfo(flowInfo);
             long flowInfoId = flowInfo.getId();
@@ -122,6 +123,16 @@ public class FlowModelService {
             Map<String, Object> flowBizlogicMap = JSON.parseObject(bizlogic);
             flowModel.setFlowBizlogic(flowBizlogicMap);
             String content = JSON.toJSONString(flowModel);
+            try {
+                String mac = DigestUtils.md5DigestAsHex(content.getBytes("utf-8"));
+                flowModel.setVersion(mac);
+                LOG.info("进行mac摘要计算成功.............{}", mac);
+            }catch (Exception e) {
+                LOG.info("进行mac摘要计算失败.............");
+                e.printStackTrace();
+                continue;
+            }
+            String contentWithMac = JSON.toJSONString(flowModel);
             String flowId = flowInfo.getFlowId();
             String flowVersion = flowInfo.getFlowVersion();
             String fileName = StringUtils.join(new String[] { flowId, flowVersion }, "-") + ".json";
@@ -131,8 +142,9 @@ public class FlowModelService {
                     Files.createDirectories(rootLocation);
                 }
                 Path path = rootLocation.resolve(fileName);
-                byte[] bytes = content.getBytes();
+                byte[] bytes = contentWithMac.getBytes();
                 Files.write(path, bytes);
+                LOG.info("写入业务文件成功.............{}", fileName);
             }
             catch (Exception e) {
                 LOG.info("写入业务文件失败.............");
