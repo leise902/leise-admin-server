@@ -3,7 +3,6 @@ package com.leise.flow.model.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,18 +15,24 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.ResourceUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.PropertyFilter;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.leise.flow.model.bizlogic.entity.FlowBizlogic;
 import com.leise.flow.model.bizlogic.entity.FlowData;
 import com.leise.flow.model.bizlogic.entity.FlowInfo;
+import com.leise.flow.model.bizlogic.entity.FlowModelRuntime;
 import com.leise.flow.model.bizlogic.service.FlowBizlogicService;
 import com.leise.flow.model.bizlogic.service.FlowDataService;
 import com.leise.flow.model.bizlogic.service.FlowInfoService;
+import com.leise.flow.model.bizlogic.service.FlowModelRuntimeService;
 import com.leise.flow.model.dto.FlowModel;
 
 @Component
@@ -44,17 +49,35 @@ public class FlowModelService {
     @Autowired
     private FlowBizlogicService flowBizlogicService;
 
+    @Autowired
+    private FlowModelRuntimeService flowModelRuntimeService;
+
+    // TODO 运行模式修改成数据库参数
+    @Value(value = "${spring.profiles.active}")
+    private String mode;
+
     private static final String BIZ_FILE_DIR = "classpath:bizlogic";
 
     public List<FlowModel> buildFlowModelList(String moduleId) {
-        this.buildFlowModelListFromDataBase(moduleId);
-        return this.buildFlowModelListFromFlie(moduleId);
+        LOG.info("服务运行模式:{}", mode);
+        if ("dev".equals(mode)) {
+            return this.buildFlowModelListFromDataBase(moduleId);
+        } else if ("prod".equals(mode)) {
+            return this.buildFlowModelListFromFlie(moduleId);
+        } else {
+            return null;
+        }
     }
 
     public FlowModel buildFlowModel(String moduleId, String flowId, String flowVersion) {
-        this.buildFlowModelFromDataBase(moduleId, flowId, flowVersion);
-        return this.buildFlowModelFromFlie(moduleId, flowId, flowVersion);
-
+        LOG.info("服务运行模式:{}", mode);
+        if ("dev".equals(mode)) {
+            return this.buildFlowModelFromDataBase(moduleId, flowId, flowVersion);
+        } else if ("prod".equals(mode)) {
+            return this.buildFlowModelFromFlie(moduleId, flowId, flowVersion);
+        } else {
+            return null;
+        }
     }
 
     public FlowModel buildFlowModelFromDataBase(String moduleId, String flowId, String flowVersion) {
@@ -94,6 +117,28 @@ public class FlowModelService {
                 String content = null;
                 content = IOUtils.toString(in, "utf-8");
                 flowModel = JSON.parseObject(content, FlowModel.class);
+                String version = flowModel.getVersion();
+                FlowModelRuntime flowModelRuntime = flowModelRuntimeService.findByBizkey(moduleId, flowId, flowVersion);
+                if (null == flowModelRuntime) {
+                    Map<String, Object> params = Maps.newHashMap();
+                    params.put("moduleId", moduleId);
+                    params.put("flowId", flowId);
+                    params.put("flowVersion", flowVersion);
+                    params.put("flowModel", content);
+                    params.put("version", version);
+                    flowModelRuntimeService.insert(params);
+                } else {
+                    String checkVersion = flowModelRuntime.getVersion();
+                    if (!version.equals(checkVersion)) {
+                        Map<String, Object> params = Maps.newHashMap();
+                        params.put("moduleId", moduleId);
+                        params.put("flowId", flowId);
+                        params.put("flowVersion", flowVersion);
+                        params.put("flowModel", content);
+                        params.put("version", version);
+                        flowModelRuntimeService.updateByBizkey(params);
+                    }
+                }
             }
             catch (Exception e) {
 
@@ -109,7 +154,6 @@ public class FlowModelService {
             LOG.warn("未查询到流程信息.......................");
             return flowModelList;
         }
-
         for (FlowInfo flowInfo : flowInfoList) {
             FlowModel flowModel = new FlowModel();
             flowModel.setFlowInfo(flowInfo);
@@ -124,30 +168,12 @@ public class FlowModelService {
             flowModel.setFlowBizlogic(flowBizlogicMap);
             String content = JSON.toJSONString(flowModel);
             try {
-                String mac = DigestUtils.md5DigestAsHex(content.getBytes("utf-8"));
-                flowModel.setVersion(mac);
-                LOG.info("进行mac摘要计算成功.............{}", mac);
-            }catch (Exception e) {
-                LOG.info("进行mac摘要计算失败.............");
-                e.printStackTrace();
-                continue;
-            }
-            String contentWithMac = JSON.toJSONString(flowModel);
-            String flowId = flowInfo.getFlowId();
-            String flowVersion = flowInfo.getFlowVersion();
-            String fileName = StringUtils.join(new String[] { flowId, flowVersion }, "-") + ".json";
-            try {
-                Path rootLocation = Paths.get("bizlogic");
-                if (Files.notExists(rootLocation)) {
-                    Files.createDirectories(rootLocation);
-                }
-                Path path = rootLocation.resolve(fileName);
-                byte[] bytes = contentWithMac.getBytes();
-                Files.write(path, bytes);
-                LOG.info("写入业务文件成功.............{}", fileName);
+                String version = DigestUtils.md5DigestAsHex(content.getBytes("utf-8"));
+                flowModel.setVersion(version);
+                LOG.info("进行mac摘要计算成功.............{}", version);
             }
             catch (Exception e) {
-                LOG.info("写入业务文件失败.............");
+                LOG.info("进行mac摘要计算失败.............");
                 e.printStackTrace();
                 continue;
             }
@@ -172,15 +198,99 @@ public class FlowModelService {
                     try (FileInputStream in = new FileInputStream(bizlogicFile)) {
                         String content = IOUtils.toString(in, "utf-8");
                         FlowModel flowModel = JSON.parseObject(content, FlowModel.class);
+                        FlowInfo flowInfo = flowModel.getFlowInfo();
+                        String flowId = flowInfo.getFlowId();
+                        String flowVersion = flowInfo.getFlowVersion();
+                        String version = flowModel.getVersion();
+                        FlowModelRuntime flowModelRuntime = flowModelRuntimeService.findByBizkey(moduleId, flowId,
+                                flowVersion);
+                        if (null == flowModelRuntime) {
+                            Map<String, Object> params = Maps.newHashMap();
+                            params.put("moduleId", moduleId);
+                            params.put("flowId", flowId);
+                            params.put("flowVersion", flowVersion);
+                            params.put("flowModel", content);
+                            params.put("version", version);
+                            flowModelRuntimeService.insert(params);
+                        } else {
+                            String checkVersion = flowModelRuntime.getVersion();
+                            if (!version.equals(checkVersion)) {
+                                Map<String, Object> params = Maps.newHashMap();
+                                params.put("moduleId", moduleId);
+                                params.put("flowId", flowId);
+                                params.put("flowVersion", flowVersion);
+                                params.put("flowModel", content);
+                                params.put("version", version);
+                                flowModelRuntimeService.updateByBizkey(params);
+                            }
+                        }
                         flowModelList.add(flowModel);
                     }
-                    catch (IOException e) {
+                    catch (Exception e) {
                         continue;
                     }
                 }
             }
         }
         return flowModelList;
+    }
+
+    public void generateFlowModelFile(String moduleId, String flowId, String flowVersion) {
+
+        PropertyFilter propertyFilter = new PropertyFilter() {
+
+            @Override
+            public boolean apply(Object object, String name, Object value) {
+                if (name.equalsIgnoreCase("id")) {
+                    return false;
+                } else if (name.equalsIgnoreCase("createTime")) {
+                    return false;
+                } else if (name.equalsIgnoreCase("modifyTime")) {
+                    return false;
+                }
+                return true;
+            }
+        };
+
+        FlowInfo flowInfo = flowInfoService.findByBizKey(moduleId, flowId, flowVersion);
+        FlowModel flowModel = new FlowModel();
+        flowModel.setFlowInfo(flowInfo);
+        long flowInfoId = flowInfo.getId();
+        List<FlowData> flowDataList = flowDataService.searchByFlowInfoId(flowInfoId);
+        if (CollectionUtils.isNotEmpty(flowDataList)) {
+            flowModel.setFlowData(flowDataList);
+        }
+        FlowBizlogic flowBizlogic = flowBizlogicService.findByFlowInfoId(flowInfoId);
+        String bizlogic = flowBizlogic.getBizlogic();
+        Map<String, Object> flowBizlogicMap = JSON.parseObject(bizlogic);
+        flowModel.setFlowBizlogic(flowBizlogicMap);
+        String content = JSON.toJSONString(flowModel);
+        try {
+            String version = DigestUtils.md5DigestAsHex(content.getBytes("utf-8"));
+            flowModel.setVersion(version);
+            LOG.info("进行mac摘要计算成功.............{}", version);
+        }
+        catch (Exception e) {
+            LOG.info("进行mac摘要计算失败.............");
+            e.printStackTrace();
+        }
+
+        String contentWithMac = JSON.toJSONString(flowModel, propertyFilter, SerializerFeature.PrettyFormat);
+        String fileName = StringUtils.join(new String[] { flowId, flowVersion }, "-") + ".json";
+        try {
+            Path rootLocation = Paths.get("bizlogic");
+            if (Files.notExists(rootLocation)) {
+                Files.createDirectories(rootLocation);
+            }
+            Path path = rootLocation.resolve(fileName);
+            byte[] bytes = contentWithMac.getBytes();
+            Files.write(path, bytes);
+            LOG.info("写入业务文件成功.............{}", fileName);
+        }
+        catch (Exception e) {
+            LOG.info("写入业务文件失败.............");
+            e.printStackTrace();
+        }
     }
 
 }

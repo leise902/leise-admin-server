@@ -47,7 +47,8 @@ public class FCFlowInfoService extends FlowInfoService {
         params.put("flowInfoId", flowInfoId);
         try {
             return namedParameterJdbcTemplate.queryForMap(FIND_BY_ID_SQL, params);
-        } catch (EmptyResultDataAccessException e) {
+        }
+        catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
@@ -55,7 +56,8 @@ public class FCFlowInfoService extends FlowInfoService {
     public List<Map<String, Object>> search() {
         try {
             return namedParameterJdbcTemplate.queryForList(SEARCH, Maps.newHashMap());
-        } catch (DataAccessException e) {
+        }
+        catch (DataAccessException e) {
             return null;
         }
     }

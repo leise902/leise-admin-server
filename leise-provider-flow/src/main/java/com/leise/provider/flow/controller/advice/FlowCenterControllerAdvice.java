@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
  * Created by JY-IT-D001 on 2018/8/2.
  */
 @ControllerAdvice
-public class FlowCenterControllerAdvice extends ApiControllerAdivce{
+public class FlowCenterControllerAdvice extends ApiControllerAdivce {
 
 }

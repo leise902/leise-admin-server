@@ -15,17 +15,18 @@ import org.springframework.stereotype.Repository;
  * Created by JY-IT-D001 on 2018/8/7.
  */
 @Repository
-public class FCModuleInfoService extends ModuleInfoService{
-    
+public class FCModuleInfoService extends ModuleInfoService {
+
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    
+
     private final String SEARCH = "select t.module_id as moduleId, t.module_name as moduleName from module_info t where t.valid_status = 1";
 
     public List<Map<String, Object>> search() {
         try {
             return namedParameterJdbcTemplate.queryForList(SEARCH, Maps.newHashMap());
-        } catch (DataAccessException e) {
+        }
+        catch (DataAccessException e) {
             return null;
         }
     }

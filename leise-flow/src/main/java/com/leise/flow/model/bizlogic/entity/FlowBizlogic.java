@@ -78,4 +78,5 @@ public class FlowBizlogic implements Serializable {
     public void setBizlogic(String bizlogic) {
         this.bizlogic = bizlogic;
     }
+
 }

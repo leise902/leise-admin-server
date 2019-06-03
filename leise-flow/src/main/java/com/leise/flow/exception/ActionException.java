@@ -29,14 +29,17 @@ public class ActionException extends FlowException {
         this.cause = cause;
     }
 
+    @Override
     public String getErrorMessage() {
         return super.getErrorMessage();
     }
 
+    @Override
     public String getCauseMessage() {
         return super.getCauseMessage();
     }
 
+    @Override
     public int getErrorCode() {
         return errorCode;
     }
@@ -46,6 +49,7 @@ public class ActionException extends FlowException {
         return cause;
     }
 
+    @Override
     public void setCause(Throwable cause) {
         this.cause = cause;
     }

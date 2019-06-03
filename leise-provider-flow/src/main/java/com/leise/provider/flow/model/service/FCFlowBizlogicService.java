@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by JY-IT-D001 on 2018/7/16.
  */
 @Repository
-public class FCFlowBizlogicService extends FlowBizlogicService{
+public class FCFlowBizlogicService extends FlowBizlogicService {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -20,14 +20,14 @@ public class FCFlowBizlogicService extends FlowBizlogicService{
     private final String INSERT_SQL = "insert into flow_bizlogic ( flow_info_id, bizlogic ) values (:flowInfoId, :bizlogic )";
 
     private final String UPDATE_BY_FLOW_INFO_ID_SQL = "update flow_bizlogic set bizlogic = :bizlogic where flow_info_id = :flowInfoId and valid_status = 1";
-    
+
     public void insert(Map<String, Object> params) {
         namedParameterJdbcTemplate.update(INSERT_SQL, new MapSqlParameterSource(params));
     }
 
     public void saveOrUpdate(Map<String, Object> params) {
         int count = namedParameterJdbcTemplate.update(UPDATE_BY_FLOW_INFO_ID_SQL, params);
-        if(count == 0){
+        if (count == 0) {
             insert(params);
         }
     }

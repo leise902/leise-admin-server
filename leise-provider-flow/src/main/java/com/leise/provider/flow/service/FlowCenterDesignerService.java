@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.MapUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -31,8 +29,6 @@ import com.leise.provider.flow.model.service.FCModuleInfoService;
 @Service
 public class FlowCenterDesignerService {
 
-    private final static Logger LOG = LoggerFactory.getLogger(FlowCenterDesignerService.class);
-
     @Autowired
     public FCModuleInfoService fcModuleInfoService;
 
@@ -50,7 +46,7 @@ public class FlowCenterDesignerService {
 
     public Map<String, List<Map<String, Object>>> getActions(String moduleId) {
         // 系统定义组件
-        Map<String, Map<String, Object>> actionPropertyCache = ActionLocalCacheRegister.actionPropertyCache;
+        Map<String, Map<String, Object>> actionPropertyCache = ActionLocalCacheRegister.ACTION_PROPERTY_CACHE;
         Map<String, List<Map<String, Object>>> actionPropertyGroup = actionPropertyCache.values().stream()
                 .collect(Collectors.groupingBy(map -> (String) map.get("groupId")));
         return actionPropertyGroup;

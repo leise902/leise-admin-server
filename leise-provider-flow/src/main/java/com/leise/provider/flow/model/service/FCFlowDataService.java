@@ -33,15 +33,16 @@ public class FCFlowDataService extends FlowDataService {
 
     private final String FIND_BY_ID = "select * from flow_data where id = :flowDataId";
 
-    public List<FlowData> searchPageByFlowInfoId(long flowInfoId, int pageNum, int pageSize){
+    public List<FlowData> searchPageByFlowInfoId(long flowInfoId, int pageNum, int pageSize) {
         Map<String, Object> params = Maps.newHashMap();
         params.put("flowInfoId", flowInfoId);
-        params.put("limit", (pageNum-1)*pageSize);
+        params.put("limit", (pageNum - 1) * pageSize);
         params.put("offset", pageSize);
-        return namedParameterJdbcTemplate.query(SEARCH_PAGE_BY_FLOW_INFO_ID_SQL, params, new BeanPropertyRowMapper<>(FlowData.class));
+        return namedParameterJdbcTemplate.query(SEARCH_PAGE_BY_FLOW_INFO_ID_SQL, params, new BeanPropertyRowMapper<>(
+                FlowData.class));
     }
 
-    public Long searchPageTotalByFlowInfoId(long flowInfoId){
+    public Long searchPageTotalByFlowInfoId(long flowInfoId) {
         Map<String, Object> params = Maps.newHashMap();
         params.put("flowInfoId", flowInfoId);
         return namedParameterJdbcTemplate.queryForObject(SEARCH_PAGE_TOTAL_BY_FLOW_INFO_ID_SQL, params, Long.class);
@@ -50,14 +51,15 @@ public class FCFlowDataService extends FlowDataService {
     public FlowData findById(long flowDataId) {
         Map<String, Object> params = Maps.newHashMap();
         params.put("flowDataId", flowDataId);
-        return namedParameterJdbcTemplate.queryForObject(FIND_BY_ID, params, new BeanPropertyRowMapper<>(FlowData.class));
+        return namedParameterJdbcTemplate.queryForObject(FIND_BY_ID, params,
+                new BeanPropertyRowMapper<>(FlowData.class));
     }
 
-    public void insert(Map params) {
+    public void insert(Map<String, Object> params) {
         namedParameterJdbcTemplate.update(INSERT_SQL, params);
     }
 
-    public int updateById(Map params) {
+    public int updateById(Map<String, Object> params) {
         int count = namedParameterJdbcTemplate.update(UPDATE_BY_ID_SQL, params);
         return count;
     }

@@ -37,7 +37,7 @@ public class FlowActionParser {
             flowAction.setActionProperties(map);
             String refClass = (String) map.get("refClass");
             Assert.notNull(refClass, "组件名称:" + flowActionName + ",流程组件配置有误[refClass]项不能为空");
-            IAction action = ActionLocalCacheRegister.actionCache.get(refClass);
+            IAction action = ActionLocalCacheRegister.ACTION_CACHE.get(refClass);
             IAction cloneAction = action.clone();
             initActionProperty(cloneAction, flowAction);
             flowAction.setAction(cloneAction);

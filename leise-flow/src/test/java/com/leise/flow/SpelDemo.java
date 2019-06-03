@@ -1,6 +1,7 @@
 package com.leise.flow;
 
 import com.google.common.collect.Maps;
+
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -56,6 +57,7 @@ public class SpelDemo {
             this.weight = weight;
         }
 
+        @Override
         public String toString() {
             return "id:" + id + ",name:" + name + ",weight:" + weight;
         }

@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class LeiseFlowApplicationTests {
+public class LeiseFlowApplicationTest {
 
     @Autowired
     private SingleQueryAction singleQueryAction;

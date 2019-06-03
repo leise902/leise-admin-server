@@ -1,9 +1,10 @@
 package com.leise.flow.model.bizlogic.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
 
 /**
  * Created by JY-IT-D001 on 2018/7/2.

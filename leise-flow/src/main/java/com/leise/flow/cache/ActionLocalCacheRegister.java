@@ -10,8 +10,8 @@ import java.util.Map;
  */
 public class ActionLocalCacheRegister {
 
-    public static final Map<String, Map<String, Object>> actionPropertyCache = Maps.newConcurrentMap();
+    public static final Map<String, Map<String, Object>> ACTION_PROPERTY_CACHE = Maps.newConcurrentMap();
 
-    public static final Map<String, IAction> actionCache = Maps.newConcurrentMap();
+    public static final Map<String, IAction> ACTION_CACHE = Maps.newConcurrentMap();
 
 }

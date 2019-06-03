@@ -9,15 +9,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class LeiseProviderFlowApplicationTests {
+public class LeiseProviderFlowApplicationTest {
 
-	@Autowired
-	private FlowCenterDesignerService fcAdminService;
+    @Autowired
+    private FlowCenterDesignerService fcAdminService;
 
-	@Test
-	public void testFlowDiagramService() {
+    @Test
+    public void testFlowDiagramService() {
 
-
-	}
+    }
 
 }

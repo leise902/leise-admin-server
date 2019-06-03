@@ -66,8 +66,8 @@ public class ActionInitializer implements CommandLineRunner {
                     actionPropertyMap.put(fieldName, StringUtils.EMPTY);
                 }
             }
-            ActionLocalCacheRegister.actionPropertyCache.put(clazz.getName(), actionPropertyMap);
-            ActionLocalCacheRegister.actionCache.put(clazz.getName(), iAction);
+            ActionLocalCacheRegister.ACTION_PROPERTY_CACHE.put(clazz.getName(), actionPropertyMap);
+            ActionLocalCacheRegister.ACTION_CACHE.put(clazz.getName(), iAction);
             LOG.info("组件{}初始化完毕", clazz.getName());
         });
 

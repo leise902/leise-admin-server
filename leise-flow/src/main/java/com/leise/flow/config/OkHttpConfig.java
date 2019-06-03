@@ -74,13 +74,13 @@ public class OkHttpConfig {
     @Bean
     public OkHttpClient okHttpSSLClient() {
         return new OkHttpClient.Builder().sslSocketFactory(sslSocketFactory(), x509TrustManager())
-                .retryOnConnectionFailure(false).connectionPool(pool())// 连接池
-                .connectTimeout(5L, TimeUnit.SECONDS).readTimeout(30L, TimeUnit.SECONDS).build();
+                .retryOnConnectionFailure(false).connectionPool(pool()).connectTimeout(5L, TimeUnit.SECONDS)
+                .readTimeout(30L, TimeUnit.SECONDS).build();
     }
 
     @Bean
     public OkHttpClient okHttpClient() {
-        return new OkHttpClient.Builder().retryOnConnectionFailure(false).connectionPool(pool())// 连接池
+        return new OkHttpClient.Builder().retryOnConnectionFailure(false).connectionPool(pool())
                 .connectTimeout(5L, TimeUnit.SECONDS).readTimeout(30L, TimeUnit.SECONDS).build();
     }
 }
