@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class HttpCommuAction implements IAction {
 
     private final static Logger LOG = LoggerFactory.getLogger(HttpCommuAction.class);
-
+    
     @ActionProperty
     private long connectTimeout = 2000;
 

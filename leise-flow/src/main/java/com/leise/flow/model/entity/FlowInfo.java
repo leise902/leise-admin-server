@@ -1,4 +1,4 @@
-package com.leise.flow.model.bizlogic.entity;
+package com.leise.flow.model.entity;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.leise.flow.model.bizlogic.entity;
+package com.leise.flow.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -6,8 +6,8 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
-@Table(name = "flow_model_runtime")
-public class FlowModelRuntime implements Serializable {
+@Table(name = "flow_biz_define")
+public class FlowBizDefine implements Serializable {
 
     private static final long serialVersionUID = -2532753487303720017L;
 

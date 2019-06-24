@@ -9,8 +9,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.leise.flow.model.bizlogic.entity.ModuleInfo;
-import com.leise.flow.model.bizlogic.service.ModuleInfoService;
+import com.leise.flow.model.entity.ModuleInfo;
+import com.leise.flow.model.service.ModuleInfoService;
 
 /**
  * Created by JY-IT-D001 on 2018/6/29.

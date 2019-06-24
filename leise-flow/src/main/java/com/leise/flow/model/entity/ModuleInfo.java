@@ -1,4 +1,4 @@
-package com.leise.flow.model.bizlogic.entity;
+package com.leise.flow.model.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Table;

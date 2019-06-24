@@ -1,7 +1,7 @@
-package com.leise.flow.model.bizlogic.service;
+package com.leise.flow.model.service;
 
 import com.google.common.collect.Maps;
-import com.leise.flow.model.bizlogic.entity.ModuleInfo;
+import com.leise.flow.model.entity.ModuleInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;

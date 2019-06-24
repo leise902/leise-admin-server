@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.ResourceUtils;
@@ -25,15 +27,11 @@ import com.alibaba.fastjson.serializer.PropertyFilter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.leise.flow.model.bizlogic.entity.FlowBizlogic;
-import com.leise.flow.model.bizlogic.entity.FlowData;
-import com.leise.flow.model.bizlogic.entity.FlowInfo;
-import com.leise.flow.model.bizlogic.entity.FlowModelRuntime;
-import com.leise.flow.model.bizlogic.service.FlowBizlogicService;
-import com.leise.flow.model.bizlogic.service.FlowDataService;
-import com.leise.flow.model.bizlogic.service.FlowInfoService;
-import com.leise.flow.model.bizlogic.service.FlowModelRuntimeService;
 import com.leise.flow.model.dto.FlowModel;
+import com.leise.flow.model.entity.FlowBizlogic;
+import com.leise.flow.model.entity.FlowData;
+import com.leise.flow.model.entity.FlowInfo;
+import com.leise.flow.model.entity.FlowBizDefine;
 
 @Component
 public class FlowModelService {
@@ -50,7 +48,7 @@ public class FlowModelService {
     private FlowBizlogicService flowBizlogicService;
 
     @Autowired
-    private FlowModelRuntimeService flowModelRuntimeService;
+    private FlowBizDefineService flowBizDefineService;
 
     // TODO 运行模式修改成数据库参数
     @Value(value = "${spring.profiles.active}")
@@ -59,10 +57,11 @@ public class FlowModelService {
     private static final String BIZ_FILE_DIR = "classpath:bizlogic";
 
     public List<FlowModel> buildFlowModelList(String moduleId) {
-        LOG.info("服务运行模式:{}", mode);
         if ("dev".equals(mode)) {
+            LOG.info("服务运行模式:{}, 此模式下业务流程数据从数据库中进行加载", mode);
             return this.buildFlowModelListFromDataBase(moduleId);
         } else if ("prod".equals(mode)) {
+            LOG.info("服务运行模式:{}, 此模式下业务流程数据应用文件中进行加载", mode);
             return this.buildFlowModelListFromFlie(moduleId);
         } else {
             return null;
@@ -118,7 +117,7 @@ public class FlowModelService {
                 content = IOUtils.toString(in, "utf-8");
                 flowModel = JSON.parseObject(content, FlowModel.class);
                 String version = flowModel.getVersion();
-                FlowModelRuntime flowModelRuntime = flowModelRuntimeService.findByBizkey(moduleId, flowId, flowVersion);
+                FlowBizDefine flowModelRuntime = flowBizDefineService.findByBizkey(moduleId, flowId, flowVersion);
                 if (null == flowModelRuntime) {
                     Map<String, Object> params = Maps.newHashMap();
                     params.put("moduleId", moduleId);
@@ -126,7 +125,7 @@ public class FlowModelService {
                     params.put("flowVersion", flowVersion);
                     params.put("flowModel", content);
                     params.put("version", version);
-                    flowModelRuntimeService.insert(params);
+                    flowBizDefineService.insert(params);
                 } else {
                     String checkVersion = flowModelRuntime.getVersion();
                     if (!version.equals(checkVersion)) {
@@ -136,7 +135,7 @@ public class FlowModelService {
                         params.put("flowVersion", flowVersion);
                         params.put("flowModel", content);
                         params.put("version", version);
-                        flowModelRuntimeService.updateByBizkey(params);
+                        flowBizDefineService.updateByBizkey(params);
                     }
                 }
             }
@@ -183,14 +182,25 @@ public class FlowModelService {
     }
 
     public List<FlowModel> buildFlowModelListFromFlie(String moduleId) {
-        List<FlowModel> flowModelList = Lists.newArrayList();
+        
+        Resource resource = new ClassPathResource("bizlogic");
         File file = null;
         try {
-            file = ResourceUtils.getFile(BIZ_FILE_DIR);
+            file = resource.getFile();
         }
-        catch (FileNotFoundException e) {
-            return flowModelList;
+        catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
         }
+        
+        List<FlowModel> flowModelList = Lists.newArrayList();
+//        File file = null;
+//        try {
+//            file = ResourceUtils.getFile(BIZ_FILE_DIR);
+//        }
+//        catch (FileNotFoundException e) {
+//            return flowModelList;
+//        }
         if (file.exists() && file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
@@ -202,18 +212,18 @@ public class FlowModelService {
                         String flowId = flowInfo.getFlowId();
                         String flowVersion = flowInfo.getFlowVersion();
                         String version = flowModel.getVersion();
-                        FlowModelRuntime flowModelRuntime = flowModelRuntimeService.findByBizkey(moduleId, flowId,
+                        FlowBizDefine flowBizDefine = flowBizDefineService.findByBizkey(moduleId, flowId,
                                 flowVersion);
-                        if (null == flowModelRuntime) {
+                        if (null == flowBizDefine) {
                             Map<String, Object> params = Maps.newHashMap();
                             params.put("moduleId", moduleId);
                             params.put("flowId", flowId);
                             params.put("flowVersion", flowVersion);
                             params.put("flowModel", content);
                             params.put("version", version);
-                            flowModelRuntimeService.insert(params);
+                            flowBizDefineService.insert(params);
                         } else {
-                            String checkVersion = flowModelRuntime.getVersion();
+                            String checkVersion = flowBizDefine.getVersion();
                             if (!version.equals(checkVersion)) {
                                 Map<String, Object> params = Maps.newHashMap();
                                 params.put("moduleId", moduleId);
@@ -221,7 +231,7 @@ public class FlowModelService {
                                 params.put("flowVersion", flowVersion);
                                 params.put("flowModel", content);
                                 params.put("version", version);
-                                flowModelRuntimeService.updateByBizkey(params);
+                                flowBizDefineService.updateByBizkey(params);
                             }
                         }
                         flowModelList.add(flowModel);
@@ -235,7 +245,7 @@ public class FlowModelService {
         return flowModelList;
     }
 
-    public void generateFlowModelFile(String moduleId, String flowId, String flowVersion) {
+    public void createBizFile(String moduleId, String flowId, String flowVersion) {
 
         PropertyFilter propertyFilter = new PropertyFilter() {
 
@@ -275,7 +285,7 @@ public class FlowModelService {
             e.printStackTrace();
         }
 
-        String contentWithMac = JSON.toJSONString(flowModel, propertyFilter, SerializerFeature.PrettyFormat);
+        String contentWithVersion = JSON.toJSONString(flowModel, propertyFilter, SerializerFeature.PrettyFormat);
         String fileName = StringUtils.join(new String[] { flowId, flowVersion }, "-") + ".json";
         try {
             Path rootLocation = Paths.get("bizlogic");
@@ -283,7 +293,7 @@ public class FlowModelService {
                 Files.createDirectories(rootLocation);
             }
             Path path = rootLocation.resolve(fileName);
-            byte[] bytes = contentWithMac.getBytes();
+            byte[] bytes = contentWithVersion.getBytes();
             Files.write(path, bytes);
             LOG.info("写入业务文件成功.............{}", fileName);
         }
