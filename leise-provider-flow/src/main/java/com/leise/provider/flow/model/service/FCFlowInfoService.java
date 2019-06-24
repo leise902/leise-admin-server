@@ -1,7 +1,7 @@
 package com.leise.provider.flow.model.service;
 
 import com.google.common.collect.Maps;
-import com.leise.flow.model.bizlogic.service.FlowInfoService;
+import com.leise.flow.model.service.FlowInfoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

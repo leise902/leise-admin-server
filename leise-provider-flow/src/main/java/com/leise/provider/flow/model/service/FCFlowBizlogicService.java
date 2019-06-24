@@ -1,6 +1,7 @@
 package com.leise.provider.flow.model.service;
 
-import com.leise.flow.model.bizlogic.service.FlowBizlogicService;
+import com.leise.flow.model.service.FlowBizlogicService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

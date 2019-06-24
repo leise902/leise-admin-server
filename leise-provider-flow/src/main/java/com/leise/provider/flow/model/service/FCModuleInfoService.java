@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
-import com.leise.flow.model.bizlogic.service.ModuleInfoService;
+import com.leise.flow.model.service.ModuleInfoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
