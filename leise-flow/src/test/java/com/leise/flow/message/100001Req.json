@@ -1,0 +1,61 @@
+{
+	"dataElements": [{
+			"dataName": "string",
+			"dataType": "string",
+			"dataRef": "reqId"
+		},
+		{
+			"dataName": "number",
+			"dataType": "number",
+			"dataRef": "b"
+		},
+		{
+			"dataName": "date",
+			"dataType": "date",
+			"dataFormat": "yyyy-MM-dd",
+			"dataRef": "c"
+		},
+		{
+			"dataName": "object",
+			"dataType": "object",
+			"dataRef": "d",
+			"elements": [{
+					"dataName": "string",
+					"dataType": "string",
+					"dataRef": "a"
+				},
+				{
+					"dataName": "number",
+					"dataType": "number",
+					"dataRef": "b"
+				},
+				{
+					"dataName": "date",
+					"dataType": "date",
+					"dataRef": "aa"
+				}
+			]
+		},
+		{
+			"dataName": "array",
+			"dataType": "array",
+			"dataRef": "e",
+			"elements": [{
+					"dataName": "string",
+					"dataType": "string",
+					"dataRef": "reqId"
+				},
+				{
+					"dataName": "number",
+					"dataType": "number",
+					"dataRef": "b"
+				},
+				{
+					"dataName": "date",
+					"dataType": "date",
+					"dataRef": "a3"
+				}
+			]
+		}
+	]
+}

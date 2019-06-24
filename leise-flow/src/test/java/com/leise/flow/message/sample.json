@@ -1,0 +1,23 @@
+{
+	"errorCode": "",
+	"errorMessage": "",
+	"header": {
+		"requestId": "11111122222",
+		"reqTime": "2019-09-23"
+	},
+
+	"body": {
+
+		"list": [{
+			"a": "111"
+		}, {
+			"b": "222"
+		}, {
+			"other": "cccc"
+		}],
+		"info": {
+			"aaa": "111",
+			"222": "2333"
+		}
+	}
+}

@@ -1,0 +1,73 @@
+{
+	"dataElements": [{
+			"dataName": "errorCode",
+			"dataType": "string",
+			"dataRef": "errorCode"
+		},{
+			"dataName": "errorMessage",
+			"dataType": "string",
+			"dataRef": "errorMessage"
+		},{
+			"dataName": "header",
+			"dataType": "object",
+			"dataRef": "none",
+			"elements": [{
+					"dataName": "requestId",
+					"dataType": "string",
+					"dataRef": "requestId"
+				},
+				{
+					"dataName": "reqTime",
+					"dataType": "date",
+					"dataRef": "reqTime"
+				},
+				{
+					"dataName": "other",
+					"dataType": "string",
+					"dataRef": "other"
+				}
+			]
+		},{
+			"dataName": "body",
+			"dataType": "object",
+			"dataRef": "none",
+			"elements": [
+			    {
+					"dataName": "list",
+					"dataType": "array",
+					"dataRef": "tranferList",
+					"elements": [{
+						"dataName": "a",
+						"dataType": "string",
+						"dataRef": "a"
+					},
+					{
+						"dataName": "b",
+						"dataType": "string",
+						"dataRef": "b"
+					},
+					{
+						"dataName": "other",
+						"dataType": "string",
+						"dataRef": "other"
+					}]
+				},
+				{
+					"dataName": "info",
+					"dataType": "object",
+					"dataRef": "none",
+					"elements": [{
+						"dataName": "aaa",
+						"dataType": "string",
+						"dataRef": "aaa"
+					},
+					{
+						"dataName": "222",
+						"dataType": "string",
+						"dataRef": "222"
+					}]
+				}
+			]
+		}]
+
+}
