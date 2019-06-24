@@ -75,4 +75,8 @@
 			</snapshots>
 		</repository>
 	</repositories>
+	<modules>
+		<module>../leise-flow</module>
+		<module>../leise-provider-flow</module>
+	</modules>
 </project>
