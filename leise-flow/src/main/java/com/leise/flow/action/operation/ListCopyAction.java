@@ -21,7 +21,11 @@ import com.leise.flow.exception.ActionException;
 import com.leise.flow.util.ActionUtils;
 
 /**
- * Created by JY-IT-D001 on 2018/7/26.
+ * 
+ * @author leise
+ * @date 2018年6月29日 下午5:13:22
+ * @classname: ListCopyAction
+ * @description: 复制集合数据
  */
 @Action(id = "ListCopyAction", name = "复制集合数据", group = ActionGroupEnum.OPERATION)
 public class ListCopyAction implements IAction {

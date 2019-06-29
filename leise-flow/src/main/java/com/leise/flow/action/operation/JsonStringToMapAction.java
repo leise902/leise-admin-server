@@ -15,7 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
- * Created by JY-IT-D001 on 2018/7/26.
+ * 
+ * @author leise
+ * @date 2018年6月29日 下午5:12:21
+ * @classname: JsonStringToMapAction
+ * @description: JSON字符串转成MAP
  */
 @Action(id = "JsonStringToMapAction", name = "JSON字符串转成MAP", group = ActionGroupEnum.OPERATION)
 public class JsonStringToMapAction implements IAction {

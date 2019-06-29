@@ -19,13 +19,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Created by JY-IT-D001 on 2018/8/15.
+ * @author leise
+ * @date 2018年6月29日 下午5:05:12
+ * @classname: HttpCommuAction
+ * @description: HTTP通讯
  */
 @Action(id = "httpCommuAction", name = "HTTP通讯", group = ActionGroupEnum.COMMU)
 public class HttpCommuAction implements IAction {
 
     private final static Logger LOG = LoggerFactory.getLogger(HttpCommuAction.class);
-    
+
     @ActionProperty
     private long connectTimeout = 2000;
 

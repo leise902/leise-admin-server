@@ -20,7 +20,10 @@ import org.springframework.util.Assert;
 import java.util.Map;
 
 /**
- * Created by JY-IT-D001 on 2018/6/26.
+ * @author leise
+ * @date 2018年6月29日 下午5:08:00
+ * @classname: SingleQueryAction
+ * @description:数据库单笔查询
  */
 @Action(id = "singleQueryAction", name = "单笔查询", group = ActionGroupEnum.DATABASE)
 public class SingleQueryAction implements IJdbcAction {

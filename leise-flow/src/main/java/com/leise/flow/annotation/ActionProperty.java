@@ -5,7 +5,11 @@ import com.leise.flow.enums.ActionPropertyEnum;
 import java.lang.annotation.*;
 
 /**
- * Created by JY-IT-D001 on 2018/6/27.
+ * 
+ * @author leise
+ * @date 2018年6月29日 下午5:27:25
+ * @classname: ActionProperty
+ * @description: TODO
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

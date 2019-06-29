@@ -6,7 +6,11 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.*;
 
 /**
- * Created by JY-IT-D001 on 2018/6/26.
+ * 
+ * @author leise
+ * @date 2018年6月29日 下午5:26:48
+ * @classname: Action
+ * @description: 标注在执行操作或动作上的注解
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

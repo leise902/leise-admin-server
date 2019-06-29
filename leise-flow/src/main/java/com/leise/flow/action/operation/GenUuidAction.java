@@ -14,7 +14,11 @@ import com.leise.flow.enums.ActionResultEnum;
 import com.leise.flow.exception.ActionException;
 
 /**
- * Created by JY-IT-D001 on 2018/8/27.
+ * 
+ * @author leise
+ * @date 2018年6月29日 下午5:12:03
+ * @classname: GenUuidAction
+ * @description: 生成UUID流水号
  */
 @Action(id = "GenUuidAction", name = "生成UUID", group = ActionGroupEnum.OPERATION)
 public class GenUuidAction implements IAction {

@@ -20,7 +20,10 @@ import org.springframework.util.Assert;
 import java.util.Map;
 
 /**
- * Created by JY-IT-D001 on 2018/6/26.
+ * @author leise
+ * @date 2018年6月29日 下午5:07:41
+ * @classname: SingleOperAction
+ * @description: 数据库单笔操作
  */
 @Action(id = "singleOperAction", name = "单笔操作", group = ActionGroupEnum.DATABASE)
 @Transactional(rollbackFor = { ActionException.class, RuntimeException.class, Exception.class })

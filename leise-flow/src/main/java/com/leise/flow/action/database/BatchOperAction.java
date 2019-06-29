@@ -23,7 +23,11 @@ import com.leise.flow.exception.ActionException;
 import com.leise.flow.util.ActionUtils;
 
 /**
- * Created by JY-IT-D001 on 2018/6/26.
+ * 
+ * @author leise
+ * @date 2018年6月29日 下午5:05:52
+ * @classname: BatchOperAction
+ * @description: 数据库批量操作
  */
 @Action(id = "BatchOperAction", name = "批量操作", group = ActionGroupEnum.DATABASE)
 @Transactional(rollbackFor = { ActionException.class, RuntimeException.class, Exception.class })

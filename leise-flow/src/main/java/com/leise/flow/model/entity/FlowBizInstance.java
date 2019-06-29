@@ -25,13 +25,13 @@ public class FlowBizInstance implements Serializable {
 
     @Column(name = "flow_instance")
     private String flowInstance;
-    
+
     @Column(name = "cost")
     private long cost;
-    
+
     @Column(name = "error_code")
     private String errorCode;
-    
+
     @Column(name = "error_message")
     private String errorMessage;
 
@@ -78,12 +78,11 @@ public class FlowBizInstance implements Serializable {
     public void setFlowVersion(String flowVersion) {
         this.flowVersion = flowVersion;
     }
-    
+
     public String getFlowInstance() {
         return flowInstance;
     }
 
-    
     public void setFlowInstance(String flowInstance) {
         this.flowInstance = flowInstance;
     }
@@ -95,22 +94,19 @@ public class FlowBizInstance implements Serializable {
     public void setVersion(String version) {
         this.version = version;
     }
-    
+
     public String getErrorCode() {
         return errorCode;
     }
 
-    
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
     }
 
-    
     public String getErrorMessage() {
         return errorMessage;
     }
 
-    
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }

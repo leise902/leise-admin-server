@@ -16,7 +16,11 @@ import com.leise.flow.exception.ActionException;
 import com.leise.flow.util.ActionUtils;
 
 /**
- * Created by JY-IT-D001 on 2018/7/26.
+ * 
+ * @author leise
+ * @date 2018年6月29日 下午5:14:55
+ * @classname: MapOperationAction
+ * @description: 操作map集合
  */
 @Action(id = "MapOperationAction", name = "操作MAP集合", group = ActionGroupEnum.OPERATION)
 public class MapOperationAction implements IAction {

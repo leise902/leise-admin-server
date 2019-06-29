@@ -14,7 +14,10 @@ import com.leise.flow.enums.ActionGroupEnum;
 import com.leise.flow.enums.ActionResultEnum;
 
 /**
- * Created by JY-IT-D001 on 2018/6/26.
+ * @author leise
+ * @date 2018年6月29日 下午5:04:20
+ * @classname: CleanFlowCacheAction
+ * @description: 清除本地流程缓存数据
  */
 @Action(id = "clearFlowCacheAction", name = "清除流程缓存", group = ActionGroupEnum.CACHE)
 public class CleanFlowCacheAction implements IAction {

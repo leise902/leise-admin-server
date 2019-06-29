@@ -17,7 +17,11 @@ import com.leise.flow.enums.ActionResultEnum;
 import com.leise.flow.exception.ActionException;
 
 /**
- * Created by JY-IT-D001 on 2018/7/26.
+ * 
+ * @author leise
+ * @date 2018年6月29日 下午5:13:01
+ * @classname: ListAddElementAction
+ * @description: 添加集合数据
  */
 @Action(id = "ListAddElementAction", name = "添加集合数据", group = ActionGroupEnum.OPERATION)
 public class ListAddElementAction implements IAction {

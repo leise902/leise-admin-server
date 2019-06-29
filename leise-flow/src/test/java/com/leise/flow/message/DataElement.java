@@ -13,7 +13,7 @@ public class DataElement {
     private String dataRef;
 
     private String dataDesc;
-    
+
     private List<DataElement> elements;
 
     public String getDataName() {

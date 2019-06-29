@@ -18,7 +18,10 @@ import org.springframework.util.DigestUtils;
 import java.util.Arrays;
 
 /**
- * Created by JY-IT-D001 on 2018/6/26.
+ * @author leise
+ * @date 2018年6月29日 下午5:09:20
+ * @classname: Md5Action
+ * @description: Md5加密
  */
 @Action(id = "Md5Action", name = "Md5加密", group = ActionGroupEnum.ENCRYPT)
 public class Md5Action implements IAction {

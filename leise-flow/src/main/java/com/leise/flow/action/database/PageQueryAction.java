@@ -23,7 +23,11 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Created by JY-IT-D001 on 2018/6/26.
+ * 
+ * @author leise
+ * @date 2018年6月29日 下午5:07:07
+ * @classname: PageQueryAction
+ * @description: 数据库分页查询
  */
 @Action(id = "pageQueryAction", name = "分页查询", group = ActionGroupEnum.DATABASE)
 public class PageQueryAction implements IJdbcAction {

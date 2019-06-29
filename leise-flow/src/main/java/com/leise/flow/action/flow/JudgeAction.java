@@ -7,7 +7,11 @@ import com.leise.flow.enums.ActionGroupEnum;
 import com.leise.flow.enums.ActionResultEnum;
 
 /**
- * Created by JY-IT-D001 on 2018/6/26.
+ * 
+ * @author leise
+ * @date 2018年6月29日 下午5:09:56
+ * @classname: JudgeAction
+ * @description: 判断条件
  */
 @Action(id = "JudgeAction", name = "判断条件", group = ActionGroupEnum.FLOW_JUMP)
 public class JudgeAction implements IJumpAction {

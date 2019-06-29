@@ -15,7 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
- * Created by JY-IT-D001 on 2018/7/26.
+ * 
+ * @author leise
+ * @date 2018年6月29日 下午5:15:30
+ * @classname: ObjectToJsonStringAction
+ * @description: 对象转成JSON字符串数据
  */
 @Action(id = "ObjectToJsonStringAction", name = "对象转成JSON字符串", group = ActionGroupEnum.OPERATION)
 public class ObjectToJsonStringAction implements IAction {

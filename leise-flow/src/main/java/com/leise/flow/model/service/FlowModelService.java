@@ -182,7 +182,7 @@ public class FlowModelService {
     }
 
     public List<FlowModel> buildFlowModelListFromFlie(String moduleId) {
-        
+
         Resource resource = new ClassPathResource("bizlogic");
         File file = null;
         try {
@@ -192,15 +192,15 @@ public class FlowModelService {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
-        
+
         List<FlowModel> flowModelList = Lists.newArrayList();
-//        File file = null;
-//        try {
-//            file = ResourceUtils.getFile(BIZ_FILE_DIR);
-//        }
-//        catch (FileNotFoundException e) {
-//            return flowModelList;
-//        }
+        // File file = null;
+        // try {
+        // file = ResourceUtils.getFile(BIZ_FILE_DIR);
+        // }
+        // catch (FileNotFoundException e) {
+        // return flowModelList;
+        // }
         if (file.exists() && file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
@@ -212,8 +212,7 @@ public class FlowModelService {
                         String flowId = flowInfo.getFlowId();
                         String flowVersion = flowInfo.getFlowVersion();
                         String version = flowModel.getVersion();
-                        FlowBizDefine flowBizDefine = flowBizDefineService.findByBizkey(moduleId, flowId,
-                                flowVersion);
+                        FlowBizDefine flowBizDefine = flowBizDefineService.findByBizkey(moduleId, flowId, flowVersion);
                         if (null == flowBizDefine) {
                             Map<String, Object> params = Maps.newHashMap();
                             params.put("moduleId", moduleId);

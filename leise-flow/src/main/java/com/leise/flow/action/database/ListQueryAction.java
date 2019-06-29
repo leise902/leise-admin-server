@@ -21,7 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by JY-IT-D001 on 2018/6/26.
+ * @author leise
+ * @date 2018年6月29日 下午5:06:21
+ * @classname: ListQueryAction
+ * @description: 数据库列表查询
  */
 @Action(id = "listQueryAction", name = "列表查询", group = ActionGroupEnum.DATABASE)
 public class ListQueryAction implements IJdbcAction {

@@ -7,7 +7,10 @@ import com.leise.flow.enums.ActionGroupEnum;
 import com.leise.flow.enums.ActionResultEnum;
 
 /**
- * Created by JY-IT-D001 on 2018/6/26.
+ * @author leise
+ * @date 2018年6月29日 下午5:09:38
+ * @classname: EndAction
+ * @description: 结束动作
  */
 @Action(id = "endAction", name = "结束", group = ActionGroupEnum.FLOW_END)
 public class EndAction implements IAction {

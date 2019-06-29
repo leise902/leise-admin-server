@@ -17,10 +17,10 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
 import com.leise.flow.context.FlowContext;
 import com.leise.flow.exception.FlowException;
+import com.leise.flow.loader.FlowLoader;
 import com.leise.flow.model.dto.FlowModel;
 import com.leise.flow.model.entity.FlowData;
 import com.leise.flow.model.entity.FlowInfo;
-import com.leise.flow.model.service.FlowModelService;
 import com.leise.flow.parser.FlowActionParser;
 import com.leise.flow.parser.FlowLinkParser;
 
@@ -33,7 +33,7 @@ public class FlowLocalCacheRegister {
     private static final Logger LOG = LoggerFactory.getLogger(FlowLocalCacheRegister.class);
 
     @Autowired
-    private FlowModelService flowModelService;
+    private FlowLoader profileMode;
 
     public LoadingCache<FlowCacheKey, FlowMetaData> flowLoadingCache = CacheBuilder.newBuilder().maximumSize(5000)
             .build(new CacheLoader<FlowCacheKey, FlowMetaData>() {
@@ -45,7 +45,7 @@ public class FlowLocalCacheRegister {
                     String flowVersion = flowCacheKey.getFlowVersion();
                     LOG.warn("!!![缓存未命中]---[模块编号:{}, 流程编号:{}, 流程版本号:{}]", moduleId, flowId, flowVersion);
                     try {
-                        FlowModel flowModel = flowModelService.buildFlowModel(moduleId, flowId, flowVersion);
+                        FlowModel flowModel = profileMode.getFlowModel(moduleId, flowId, flowVersion);
                         FlowMetaData metaData = initFlowMetaData(flowModel);
                         return metaData;
                     }
@@ -66,14 +66,14 @@ public class FlowLocalCacheRegister {
         }
     }
 
-    public void initFlowLocalCache(String moduleId) {
-        List<FlowModel> flowModelList = flowModelService.buildFlowModelList(moduleId);
-        if (CollectionUtils.isEmpty(flowModelList)) {
+    public void initFlowLocalCache(List<FlowModel> list) {
+        if (CollectionUtils.isEmpty(list)) {
             LOG.warn("未查询到流程配置数据...初始化流程配置结束......");
             return;
         }
-        flowModelList.stream().forEach(flowModel -> {
+        list.stream().forEach(flowModel -> {
             FlowInfo flowInfo = flowModel.getFlowInfo();
+            String moduleId = flowInfo.getModuleId();
             String flowId = flowInfo.getFlowId();
             String flowVersion = flowInfo.getFlowVersion();
             FlowMetaData metaData = this.initFlowMetaData(flowModel);

@@ -1,10 +1,10 @@
 package com.leise.flow.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
-
 import java.io.Serializable;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
 
 @Table(name = "flow_biz_define")
 public class FlowBizDefine implements Serializable {
