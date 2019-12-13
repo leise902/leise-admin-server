@@ -24,42 +24,42 @@ public class ApiControllerAdivce {
     @ResponseBody
     public JsonResult handleException(FlowException e) {
         LOG.error("@_@[流程发生异常]:", e);
-        return new JsonResult(e.getErrorCode(), e.getErrorMessage(), null);
+        return new JsonResult(e.getErrorCode(), e.getErrorMessage(), e.getCauseMessage());
     }
 
     @ExceptionHandler(ActionException.class)
     @ResponseBody
     public JsonResult handleException(ActionException e) {
         LOG.error("@_@[组件发生异常]:", e);
-        return new JsonResult(e.getErrorCode(), e.getErrorMessage(), null);
+        return new JsonResult(e.getErrorCode(), e.getErrorMessage(), e.getCauseMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseBody
     public JsonResult handleException(IllegalArgumentException e) {
         LOG.error("@_@[参数发生异常]:", e);
-        return new JsonResult(555555, "参数发生异常", null);
+        return new JsonResult(555555, "参数发生异常", e.getMessage());
     }
 
     @ExceptionHandler(SQLException.class)
     @ResponseBody
     public JsonResult handleException(SQLException e) {
         LOG.error("@_@[数据库发生异常]:", e);
-        return new JsonResult(e.getErrorCode(), e.getMessage(), null);
+        return new JsonResult(e.getErrorCode(), e.getMessage(), e.getCause().getMessage());
     }
 
     @ExceptionHandler(DataAccessException.class)
     @ResponseBody
     public JsonResult handleException(DataAccessException e) {
         LOG.error("@_@[数据库发生异常]:", e);
-        return new JsonResult(200000, e.getMessage(), null);
+        return new JsonResult(200000, e.getMessage(), e.getCause().getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public JsonResult handleException(Exception e) {
         LOG.error("@_@[系统其它异常]:", e);
-        return new JsonResult(-1, e.getMessage(), null);
+        return new JsonResult(-1, e.getMessage(), e.getCause().getMessage());
     }
 
 }

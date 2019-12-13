@@ -17,6 +17,7 @@ import com.leise.flow.model.service.ModuleInfoService;
  */
 @Component
 @Order(0)
+@Deprecated
 public class ModuleInitializer implements CommandLineRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(ModuleInitializer.class);

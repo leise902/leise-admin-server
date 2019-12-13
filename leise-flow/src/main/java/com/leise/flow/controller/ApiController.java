@@ -17,12 +17,12 @@ public class ApiController {
     private final static Logger LOG = LoggerFactory.getLogger(ApiController.class);
 
     @Autowired
-    FlowEngine flowEngine;
+    public FlowEngine flowEngine;
 
     public JsonResult doExecute(final String serviceId, final String version, final String requestMsg) throws Exception {
         LOG.info("[服务控制器]--[接收到请求数据]:[服务编号:{}]---[版本号:{}]---[请求数据:{}]", serviceId, version, requestMsg);
-        Assert.notNull(serviceId, "[服务编号]格式不正确");
-        Assert.notNull(requestMsg, "[请求数据]格式不正确");
+        Assert.notNull(serviceId, "[服务编号]不能为空");
+        Assert.notNull(version, "[服务版本号]不能为空");
         Map<String, Object> result = flowEngine.executeFlow(serviceId, version, requestMsg);
         JsonResult jsonView = new JsonResult(0, "成功", result);
         LOG.info("[服务控制器]--[返回响应数据]:{}", JSON.toJSONString(jsonView));

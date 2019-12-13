@@ -59,7 +59,8 @@
 					"elements": [{
 						"dataName": "aaa",
 						"dataType": "string",
-						"dataRef": "aaa"
+						"dataRef": "aaa",
+						"dataValue": ['1111' ,'2222']
 					},
 					{
 						"dataName": "222",

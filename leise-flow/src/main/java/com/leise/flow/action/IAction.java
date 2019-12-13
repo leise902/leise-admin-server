@@ -7,7 +7,7 @@ import com.leise.flow.enums.ActionResultEnum;
  * @author leise
  * @date 2018年6月29日 下午4:59:45
  * @classname: IAction
- * @description: 执行动作/操作的接口类
+ * @description: 执行动作的接口类
  */
 public interface IAction extends Cloneable {
 

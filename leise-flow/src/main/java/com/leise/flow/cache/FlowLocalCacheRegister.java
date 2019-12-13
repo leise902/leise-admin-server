@@ -2,7 +2,6 @@ package com.leise.flow.cache;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Maps;
 import com.leise.flow.context.FlowContext;
-import com.leise.flow.exception.FlowException;
 import com.leise.flow.loader.FlowLoader;
 import com.leise.flow.model.dto.FlowModel;
 import com.leise.flow.model.entity.FlowData;
@@ -33,7 +31,7 @@ public class FlowLocalCacheRegister {
     private static final Logger LOG = LoggerFactory.getLogger(FlowLocalCacheRegister.class);
 
     @Autowired
-    private FlowLoader profileMode;
+    private FlowLoader flowloader;
 
     public LoadingCache<FlowCacheKey, FlowMetaData> flowLoadingCache = CacheBuilder.newBuilder().maximumSize(5000)
             .build(new CacheLoader<FlowCacheKey, FlowMetaData>() {
@@ -43,25 +41,22 @@ public class FlowLocalCacheRegister {
                     String moduleId = flowCacheKey.getModuleId();
                     String flowId = flowCacheKey.getFlowId();
                     String flowVersion = flowCacheKey.getFlowVersion();
-                    LOG.warn("!!![缓存未命中]---[模块编号:{}, 流程编号:{}, 流程版本号:{}]", moduleId, flowId, flowVersion);
-                    try {
-                        FlowModel flowModel = profileMode.getFlowModel(moduleId, flowId, flowVersion);
-                        FlowMetaData metaData = initFlowMetaData(flowModel);
-                        return metaData;
+                    LOG.warn("!!![缓存未命中需重新加载]");
+                    FlowModel flowModel = flowloader.getFlowModel(moduleId, flowId, flowVersion);
+                    FlowMetaData flowMetaData = initFlowMetaData(flowModel);
+                    if (null == flowMetaData) {
+                        LOG.error("读取服务数据出现异常:业务逻辑数据不存在");
                     }
-                    catch (Exception e) {
-                        throw new FlowException("加载流程失败，请进行数据检查");
-                    }
+                    return flowMetaData;
                 }
             });
 
     public FlowMetaData getFlowMetaData(FlowCacheKey flowCacheKey) {
+        LOG.info("[从缓存读取服务数据]");
         try {
-            LOG.info("命中缓存对象:{}", this.flowLoadingCache.toString());
             return flowLoadingCache.get(flowCacheKey);
         }
-        catch (ExecutionException e) {
-            e.printStackTrace();
+        catch (Exception e) {
             return null;
         }
     }
@@ -86,9 +81,14 @@ public class FlowLocalCacheRegister {
     }
 
     public FlowMetaData initFlowMetaData(FlowModel flowModel) {
+
+        Map<String, Object> flowBizlogic = flowModel.getFlowBizlogic();
+        if (null == flowBizlogic) {
+            return null;
+        }
+
         FlowInfo flowInfo = flowModel.getFlowInfo();
         List<FlowData> flowDataList = flowModel.getFlowData();
-        Map<String, Object> flowBizlogic = flowModel.getFlowBizlogic();
         FlowMetaData metaData = new FlowMetaData();
         String moduleId = flowInfo.getModuleId();
         String flowId = flowInfo.getFlowId();
@@ -111,16 +111,13 @@ public class FlowLocalCacheRegister {
         metaData.setContext(context);
         metaData.setInputParams(inputParams);
         metaData.setOutputParams(outputParams);
-        if (flowBizlogic != null) {
 
-            List<FlowAction> flowActions = (List<FlowAction>) flowBizlogic.get("nodeDataArray");
-            List<FlowLink> flowLinks = (List<FlowLink>) flowBizlogic.get("linkDataArray");
-            FlowActionParser.parse(flowActions, metaData);
-            FlowLinkParser.parse(flowLinks, metaData);
+        List<FlowAction> flowActions = (List<FlowAction>) flowBizlogic.get("nodeDataArray");
+        List<FlowLink> flowLinks = (List<FlowLink>) flowBizlogic.get("linkDataArray");
+        FlowActionParser.parse(flowActions, metaData);
+        FlowLinkParser.parse(flowLinks, metaData);
 
-            return metaData;
-        }
-        return null;
+        return metaData;
     }
 
 }

@@ -76,6 +76,7 @@ public class PageQueryAction implements IJdbcAction {
             String tempCountSql = "select found_rows()";
             dataList = this.queryDataList(context, tempPageSql);
             total = namedParameterJdbcTemplate.queryForObject(tempCountSql, Maps.newHashMap(), Long.class);
+            total = total == null ? 0L : total;
             context.put("total", total);
             if (total <= 0) {
                 LOG.warn("o_0[没有查询到数据记录]");
@@ -84,6 +85,7 @@ public class PageQueryAction implements IJdbcAction {
         } else {
             if (Boolean.parseBoolean(this.queryCount)) {
                 total = this.queryTotal(context, this.countSql);
+                total = total == null ? 0L : total;
                 context.put("total", total);
                 if (total <= 0) {
                     LOG.warn("o_0[没有查询到数据记录]");

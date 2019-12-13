@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -28,10 +27,10 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.leise.flow.model.dto.FlowModel;
+import com.leise.flow.model.entity.FlowBizDefine;
 import com.leise.flow.model.entity.FlowBizlogic;
 import com.leise.flow.model.entity.FlowData;
 import com.leise.flow.model.entity.FlowInfo;
-import com.leise.flow.model.entity.FlowBizDefine;
 
 @Component
 public class FlowModelService {
@@ -50,36 +49,22 @@ public class FlowModelService {
     @Autowired
     private FlowBizDefineService flowBizDefineService;
 
-    // TODO 运行模式修改成数据库参数
-    @Value(value = "${spring.profiles.active}")
-    private String mode;
-
     private static final String BIZ_FILE_DIR = "classpath:bizlogic";
 
-    public List<FlowModel> buildFlowModelList(String moduleId) {
-        if ("dev".equals(mode)) {
-            LOG.info("服务运行模式:{}, 此模式下业务流程数据从数据库中进行加载", mode);
-            return this.buildFlowModelListFromDataBase(moduleId);
-        } else if ("prod".equals(mode)) {
-            LOG.info("服务运行模式:{}, 此模式下业务流程数据应用文件中进行加载", mode);
-            return this.buildFlowModelListFromFlie(moduleId);
-        } else {
-            return null;
-        }
-    }
-
-    public FlowModel buildFlowModel(String moduleId, String flowId, String flowVersion) {
-        LOG.info("服务运行模式:{}", mode);
-        if ("dev".equals(mode)) {
-            return this.buildFlowModelFromDataBase(moduleId, flowId, flowVersion);
-        } else if ("prod".equals(mode)) {
-            return this.buildFlowModelFromFlie(moduleId, flowId, flowVersion);
-        } else {
-            return null;
-        }
-    }
-
+    /**
+     * 
+     * @title: buildFlowModelFromDataBase
+     * @author leise
+     * @description: （单笔）从数据库加载业务流程信息
+     * @date 2019年12月5日 下午11:03:38
+     * @param moduleId
+     * @param flowId
+     * @param flowVersion
+     * @return
+     * @throws
+     */
     public FlowModel buildFlowModelFromDataBase(String moduleId, String flowId, String flowVersion) {
+        LOG.info("（单笔）从数据库中加载服务流程信息...");
         FlowInfo flowInfo = flowInfoService.findByBizKey(moduleId, flowId, flowVersion);
         if (flowInfo == null) {
             return null;
@@ -92,13 +77,30 @@ public class FlowModelService {
             flowModel.setFlowData(flowDataList);
         }
         FlowBizlogic flowBizlogic = flowBizlogicService.findByFlowInfoId(flowInfoId);
-        String bizlogic = flowBizlogic.getBizlogic();
-        Map<String, Object> flowBizlogicMap = JSON.parseObject(bizlogic);
-        flowModel.setFlowBizlogic(flowBizlogicMap);
+        if (null != flowBizlogic) {
+            String bizlogic = flowBizlogic.getBizlogic();
+            Map<String, Object> flowBizlogicMap = JSON.parseObject(bizlogic);
+            flowModel.setFlowBizlogic(flowBizlogicMap);
+        } else {
+            LOG.warn("业务逻辑数据不存在.......................流程ID:{}", flowInfoId);
+        }
         return flowModel;
     }
 
+    /**
+     * 
+     * @title: buildFlowModelFromFlie
+     * @author leise
+     * @description:（单笔）从文件中加载业务流程信息
+     * @date 2019年12月5日 下午11:04:50
+     * @param moduleId
+     * @param flowId
+     * @param flowVersion
+     * @return
+     * @throws
+     */
     public FlowModel buildFlowModelFromFlie(String moduleId, String flowId, String flowVersion) {
+        LOG.info("（单笔）从文件中加载服务流程信息...");
         String fileName = StringUtils.join(new String[] { flowId, flowVersion }, "-") + ".json";
         FlowModel flowModel = null;
         File bizlogicFile = null;
@@ -162,21 +164,25 @@ public class FlowModelService {
                 flowModel.setFlowData(flowDataList);
             }
             FlowBizlogic flowBizlogic = flowBizlogicService.findByFlowInfoId(flowInfoId);
-            String bizlogic = flowBizlogic.getBizlogic();
-            Map<String, Object> flowBizlogicMap = JSON.parseObject(bizlogic);
-            flowModel.setFlowBizlogic(flowBizlogicMap);
-            String content = JSON.toJSONString(flowModel);
-            try {
-                String version = DigestUtils.md5DigestAsHex(content.getBytes("utf-8"));
-                flowModel.setVersion(version);
-                LOG.info("进行mac摘要计算成功.............{}", version);
+            if (null != flowBizlogic) {
+                String bizlogic = flowBizlogic.getBizlogic();
+                Map<String, Object> flowBizlogicMap = JSON.parseObject(bizlogic);
+                flowModel.setFlowBizlogic(flowBizlogicMap);
+                String content = JSON.toJSONString(flowModel);
+                try {
+                    String version = DigestUtils.md5DigestAsHex(content.getBytes("utf-8"));
+                    flowModel.setVersion(version);
+                    LOG.info("进行mac摘要计算成功.............{}", version);
+                }
+                catch (Exception e) {
+                    LOG.info("进行mac摘要计算失败.............");
+                    e.printStackTrace();
+                    continue;
+                }
+                flowModelList.add(flowModel);
+            } else {
+                LOG.warn("业务逻辑数据不存在.......................流程ID:{}", flowInfoId);
             }
-            catch (Exception e) {
-                LOG.info("进行mac摘要计算失败.............");
-                e.printStackTrace();
-                continue;
-            }
-            flowModelList.add(flowModel);
         }
         return flowModelList;
     }
@@ -201,7 +207,7 @@ public class FlowModelService {
         // catch (FileNotFoundException e) {
         // return flowModelList;
         // }
-        if (file.exists() && file.isDirectory()) {
+        if (null != file && file.exists() && file.isDirectory()) {
             File[] files = file.listFiles();
             if (files != null) {
                 for (File bizlogicFile : files) {
@@ -242,6 +248,35 @@ public class FlowModelService {
             }
         }
         return flowModelList;
+    }
+
+    public FlowModel generateSourceCode(Map<String, Object> sourceCode) {
+
+        Map<String, Object> flowMap = (Map) sourceCode.get("modelData");
+        FlowInfo flowInfo = (FlowInfo) JSON.parseObject(JSON.toJSONString(flowMap), FlowInfo.class);
+        FlowModel flowModel = new FlowModel();
+        flowModel.setFlowInfo(flowInfo);
+        Long flowInfoId = Long.parseLong(String.valueOf(flowMap.get("flowInfoId")));
+        List<FlowData> flowDataList = flowDataService.searchByFlowInfoId(flowInfoId);
+        if (CollectionUtils.isNotEmpty(flowDataList)) {
+            flowModel.setFlowData(flowDataList);
+        }
+
+        Map<String, Object> flowBizlogicMap = Maps.newHashMap();
+        flowBizlogicMap.put("nodeDataArray", sourceCode.get("nodeDataArray"));
+        flowBizlogicMap.put("linkDataArray", sourceCode.get("linkDataArray"));
+        flowModel.setFlowBizlogic(flowBizlogicMap);
+        String flowModelContent = JSON.toJSONString(flowModel);
+        try {
+            String version = DigestUtils.md5DigestAsHex(flowModelContent.getBytes("utf-8"));
+            flowModel.setVersion(version);
+            LOG.info("进行mac摘要计算成功.............{}", version);
+        }
+        catch (Exception e) {
+            LOG.info("进行mac摘要计算失败.............");
+        }
+
+        return flowModel;
     }
 
     public void createBizFile(String moduleId, String flowId, String flowVersion) {

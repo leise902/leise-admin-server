@@ -25,7 +25,6 @@ import com.leise.flow.cache.FlowCacheKey;
 import com.leise.flow.cache.FlowLink;
 import com.leise.flow.cache.FlowLocalCacheRegister;
 import com.leise.flow.cache.FlowMetaData;
-import com.leise.flow.constant.FlowConstant;
 import com.leise.flow.context.FlowContext;
 import com.leise.flow.enums.ActionResultEnum;
 import com.leise.flow.exception.ActionException;
@@ -49,31 +48,30 @@ public class FlowEngine {
 
     @Transactional(rollbackFor = { FlowException.class, ActionException.class, RuntimeException.class, Exception.class })
     public Map<String, Object> executeFlow(final String flowId, final String flowVersion, final String requestMsg) {
+        LOG.info("[启动流程引擎] -- [模块编号:{}, 流程编号:{}, 流程版本号:{}]", moduleId, flowId, flowVersion);
         FlowCacheKey flowCacheKey = new FlowCacheKey(this.moduleId, flowId, flowVersion);
         FlowMetaData flowMetaData = flowLocalCacheRegister.getFlowMetaData(flowCacheKey);
         if (flowMetaData == null) {
-            throw new FlowException("无法获取流程配置信息");
+            throw new FlowException(999999, "无法获取流程配置信息");
         }
         FlowContext context = flowMetaData.getContext();
         String flowName = context.getFlowName();
+        LOG.info("[启动流程引擎] -- [流程名称:{}]", flowName);
         Map<String, Object> inputParams = flowMetaData.getInputParams();
         JSONObject jsonObject = JSON.parseObject(requestMsg);
         if (MapUtils.isEmpty(inputParams)) {
-            LOG.warn("!!![未配置输入参数]--[模块编号:{},流程编号:{},流程名称:{},流程版本号:{}]", this.moduleId, flowId, flowName, flowVersion);
+            LOG.warn("!!![未配置输入参数]");
         } else {
-            Set<String> keySet = inputParams.keySet();
-            for (String key : keySet) {
-                Object value = jsonObject.get(key);
-                inputParams.put(key, value);
+            if (null != jsonObject) {
+                Set<String> keySet = inputParams.keySet();
+                for (String key : keySet) {
+                    Object value = jsonObject.get(key);
+                    inputParams.put(key, value);
+                }
             }
-            LOG.info("[模块编号:{},流程编号:{},流程名称:{},流程版本号:{}]--[输入参数:{}]", this.moduleId, flowId, flowName, flowVersion,
-                    inputParams);
+            LOG.info("[输入参数:{}]", inputParams);
             context.putAll(inputParams);
         }
-        context.put(FlowConstant.REQ_COMMON_DATA_APPKEY, jsonObject.get(FlowConstant.REQ_COMMON_DATA_APPKEY));
-        context.put(FlowConstant.REQ_COMMON_DATA_REQ_TIME, jsonObject.get(FlowConstant.REQ_COMMON_DATA_REQ_TIME));
-        context.put(FlowConstant.REQ_COMMON_DATA_RANDOM_NUM, jsonObject.get(FlowConstant.REQ_COMMON_DATA_RANDOM_NUM));
-
         Map<Integer, FlowAction> flowActionMap = flowMetaData.getFlowActions();
         Map<Integer, List<FlowLink>> flowLinkMap = flowMetaData.getFlowLinks();
         int flowStartIndex = flowMetaData.getFlowStartIndex();
@@ -83,8 +81,7 @@ public class FlowEngine {
             IAction action = flowAction.getAction();
             ActionResultEnum result = action.execute(context);
             context.put("actionResult", result.toString());
-            LOG.info("[执行完毕] -- [模块编号:{},流程编号:{},流程名称:{},流程版本号:{},组件编号:{},组件名称:{}]", this.moduleId, flowId, flowName,
-                    flowVersion, flowAction.getFlowActionId(), flowAction.getFlowActionName());
+            LOG.info("[执行组件完毕] -- [组件编号:{},组件名称:{}]", flowAction.getFlowActionId(), flowAction.getFlowActionName());
             if (flowAction.isEnd()) {
                 break;
             } else {
@@ -101,7 +98,7 @@ public class FlowEngine {
         }
         Map<String, Object> outputParams = flowMetaData.getOutputParams();
         if (MapUtils.isEmpty(outputParams)) {
-            LOG.warn("!!![未配置输出参数]--[模块编号:{},流程编号:{},流程名称:{},流程版本号:{}]", this.moduleId, flowId, flowName, flowVersion);
+            LOG.warn("!!![未配置输出参数]");
         } else {
             Set<String> keySet = outputParams.keySet();
             for (String key : keySet) {
@@ -142,7 +139,10 @@ public class FlowEngine {
     private boolean judgeCondition(String condition, FlowContext context) {
         StandardEvaluationContext expressionContext = new StandardEvaluationContext();
         expressionContext.setVariables(context);
-        boolean result = SPEL.parseExpression(condition).getValue(expressionContext, Boolean.class);
+        Boolean result = SPEL.parseExpression(condition).getValue(expressionContext, Boolean.class);
+        if (null == result) {
+            return false;
+        }
         return result;
     }
 
