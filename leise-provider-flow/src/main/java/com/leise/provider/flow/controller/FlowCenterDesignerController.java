@@ -7,22 +7,22 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.PropertyFilter;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.leise.flow.dto.JsonResult;
+import com.leise.flow.model.dto.FlowModel;
 import com.leise.provider.flow.service.FlowCenterDesignerService;
 
 /**
  * Created by JY-IT-D001 on 2018/7/10.
  */
 @RestController
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequestMapping(value = { "/designer", "/flow/designer" })
 public class FlowCenterDesignerController {
 
@@ -176,6 +176,29 @@ public class FlowCenterDesignerController {
         Assert.isTrue(StringUtils.isNotEmpty(flowInfoId), "请求参数不能为空,请检查请求参数列表");
         flowCenterDesignerService.clearFlowCache(Long.parseLong(flowInfoId));
         JsonResult jsonResult = new JsonResult(0, "成功", null);
+        LOG.info("[响应数据]:{}", JSON.toJSONString(jsonResult));
+        return jsonResult;
+    }
+
+    @RequestMapping("/generateSourceCode")
+    public JsonResult generateSourceCode(@RequestBody String requestMsg) {
+        LOG.info("[请求数据]:{/designer/generateSourceCode}, 接收到请求参数:{}", requestMsg);
+        Map<String, Object> params = JSON.parseObject(requestMsg);
+        FlowModel flowModel = flowCenterDesignerService.generateSourceCode(params);
+        PropertyFilter propertyFilter = new PropertyFilter() {
+            @Override
+            public boolean apply(Object object, String name, Object value) {
+                if (name.equalsIgnoreCase("id")) {
+                    return false;
+                } else if (name.equalsIgnoreCase("createTime")) {
+                    return false;
+                } else if (name.equalsIgnoreCase("modifyTime")) {
+                    return false;
+                }
+                return true;
+            }
+        };
+        JsonResult jsonResult = new JsonResult(0, "成功", JSON.toJSONString(flowModel, propertyFilter, SerializerFeature.PrettyFormat));
         LOG.info("[响应数据]:{}", JSON.toJSONString(jsonResult));
         return jsonResult;
     }

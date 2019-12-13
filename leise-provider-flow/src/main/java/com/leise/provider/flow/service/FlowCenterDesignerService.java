@@ -16,8 +16,10 @@ import com.google.common.collect.Maps;
 import com.leise.flow.cache.ActionLocalCacheRegister;
 import com.leise.flow.cache.FlowCacheKey;
 import com.leise.flow.cache.FlowLocalCacheRegister;
+import com.leise.flow.model.dto.FlowModel;
 import com.leise.flow.model.entity.FlowBizlogic;
 import com.leise.flow.model.entity.FlowData;
+import com.leise.flow.model.service.FlowModelService;
 import com.leise.provider.flow.model.service.FCFlowBizlogicService;
 import com.leise.provider.flow.model.service.FCFlowDataService;
 import com.leise.provider.flow.model.service.FCFlowInfoService;
@@ -40,6 +42,9 @@ public class FlowCenterDesignerService {
 
     @Autowired
     private FCFlowDataService fcFlowDataService;
+
+    @Autowired
+    private FlowModelService flowModelService;
 
     @Autowired
     private FlowLocalCacheRegister flowLocalCacheRegister;
@@ -148,5 +153,9 @@ public class FlowCenterDesignerService {
         String flowVersion = (String) flowInfoMap.get("flowVersion");
         String moduleId = (String) flowInfoMap.get("moduleId");
         flowLocalCacheRegister.flowLoadingCache.invalidate(new FlowCacheKey(moduleId, flowId, flowVersion));
+    }
+
+    public FlowModel generateSourceCode(Map params) {
+        return flowModelService.generateSourceCode(params);
     }
 }

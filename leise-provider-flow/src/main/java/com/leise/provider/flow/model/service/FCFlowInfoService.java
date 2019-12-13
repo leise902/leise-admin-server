@@ -35,7 +35,7 @@ public class FCFlowInfoService extends FlowInfoService {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(INSERT_SQL, new MapSqlParameterSource(params), keyHolder,
                 new String[] { "id" });
-        return keyHolder.getKey().longValue();
+        return keyHolder.getKey() == null ? -1 : keyHolder.getKey().longValue();
     }
 
     public void update(Map<String, Object> params) {
