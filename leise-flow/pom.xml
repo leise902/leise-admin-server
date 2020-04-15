@@ -23,7 +23,7 @@
 		<commons-collections.version>3.2.2</commons-collections.version>
 		<commons-io.version>2.6</commons-io.version>
 		<guava.version>21.0</guava.version>
-		<fastjson.version>1.2.6</fastjson.version>
+		<fastjson.version>1.2.25</fastjson.version>
 		<okhttp.version>3.8.1</okhttp.version>
 		<!-- <spring-cloud.version>Finchley.RELEASE</spring-cloud.version> -->
 	</properties>
